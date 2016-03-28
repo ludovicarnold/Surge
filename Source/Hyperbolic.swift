@@ -24,6 +24,10 @@ import Accelerate
 
 // MARK: Hyperbolic Sine
 
+/**
+ Hyperbolic sine.
+ - returns: sinh(x) (element-wise,  newly allocated).
+ */
 public func sinh(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvsinhf(&results, x, [Int32(x.count)])
@@ -31,6 +35,10 @@ public func sinh(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Hyperbolic sine.
+ - returns: sinh(x) (element-wise,  newly allocated).
+ */
 public func sinh(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvsinh(&results, x, [Int32(x.count)])
@@ -40,6 +48,10 @@ public func sinh(x: [Double]) -> [Double] {
 
 // MARK: Hyperbolic Cosine
 
+/**
+ Hyperbolic cosine.
+ - returns: cosh(x) (element-wise,  newly allocated).
+ */
 public func cosh(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvcoshf(&results, x, [Int32(x.count)])
@@ -47,6 +59,10 @@ public func cosh(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Hyperbolic cosine.
+ - returns: cosh(x) (element-wise,  newly allocated).
+ */
 public func cosh(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvcosh(&results, x, [Int32(x.count)])
@@ -56,6 +72,10 @@ public func cosh(x: [Double]) -> [Double] {
 
 // MARK: Hyperbolic Tangent
 
+/**
+ Hyperbolic tangent.
+ - returns: tanh(x) (element-wise,  newly allocated).
+ */
 public func tanh(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvtanhf(&results, x, [Int32(x.count)])
@@ -63,6 +83,10 @@ public func tanh(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Hyperbolic tangent.
+ - returns: tanh(x) (element-wise,  newly allocated).
+ */
 public func tanh(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvtanh(&results, x, [Int32(x.count)])
@@ -72,6 +96,10 @@ public func tanh(x: [Double]) -> [Double] {
 
 // MARK: Inverse Hyperbolic Sine
 
+/**
+ Inverse hyperbolic sine.
+ - returns: asinh(x) (element-wise,  newly allocated).
+ */
 public func asinh(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvasinhf(&results, x, [Int32(x.count)])
@@ -79,6 +107,10 @@ public func asinh(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Inverse hyperbolic sine.
+ - returns: asinh(x) (element-wise,  newly allocated).
+ */
 public func asinh(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvasinh(&results, x, [Int32(x.count)])
@@ -88,6 +120,10 @@ public func asinh(x: [Double]) -> [Double] {
 
 // MARK: Inverse Hyperbolic Cosine
 
+/**
+ Inverse hyperbolic cosine.
+ - returns: acosh(x) (element-wise,  newly allocated).
+ */
 public func acosh(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvacoshf(&results, x, [Int32(x.count)])
@@ -95,6 +131,10 @@ public func acosh(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Inverse hyperbolic cosine.
+ - returns: acosh(x) (element-wise,  newly allocated).
+ */
 public func acosh(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvacosh(&results, x, [Int32(x.count)])
@@ -104,6 +144,10 @@ public func acosh(x: [Double]) -> [Double] {
 
 // MARK: Inverse Hyperbolic Tangent
 
+/**
+ Inverse hyperbolic tangent.
+ - returns: atanh(x) (element-wise,  newly allocated).
+ */
 public func atanh(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvatanhf(&results, x, [Int32(x.count)])
@@ -111,6 +155,10 @@ public func atanh(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Inverse hyperbolic tangent.
+ - returns: atanh(x) (element-wise,  newly allocated).
+ */
 public func atanh(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvatanh(&results, x, [Int32(x.count)])

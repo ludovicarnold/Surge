@@ -1,6 +1,7 @@
 // Hyperbolic.swift
 //
 // Copyright (c) 2014–2015 Mattt Thompson (http://mattt.me)
+//                    2016 Ludovic Arnold (http://ludovicarnold.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,20 +28,35 @@ public enum MatrixAxies {
     case Column
 }
 
+/**
+ A Surge Matrix with elements of type T.
+ - parameter T: the type of the matrix elements (e.g. Float or Double).
+ - note: the matrix is in row major (a.k.a. C) order.
+*/
 public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
     public typealias Element = T
 
     let rows: Int
     let columns: Int
     var grid: [Element]
-
+    
+    /**
+     Create a new matrix filled with repeatedValue.
+     - parameter rows: the number of rows.
+     - parameter columns: the number of columns.
+     - parameter repeatedValue: the initial value for all matrix elements.
+    */
     public init(rows: Int, columns: Int, repeatedValue: Element) {
         self.rows = rows
         self.columns = columns
 
         self.grid = [Element](count: rows * columns, repeatedValue: repeatedValue)
     }
-
+    
+    /**
+     Create a new matrix initialized with the given contents (copy).
+     - parameter contents: the matrix contents.
+    */
     public init(_ contents: [[Element]]) {
         let m: Int = contents.count
         let n: Int = contents[0].count
@@ -52,7 +68,12 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
             grid.replaceRange(i*n..<i*n+min(m, row.count), with: row)
         }
     }
-
+    
+    /**
+     Get or set a single element.
+     - parameter row: the element's row
+     - parameter column: the element's column
+    */
     public subscript(row: Int, column: Int) -> Element {
         get {
             assert(indexIsValidForRow(row, column: column))
@@ -65,7 +86,11 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
         }
     }
     
-    public subscript(row row: Int) -> [Element] {
+    /**
+     Get or set a row (copy).
+     - parameter row: the row index.
+    */
+    public subscript(row: Int) -> [Element] {
         get {
             assert(row < rows)
             let startIndex = row * columns
@@ -82,6 +107,10 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
         }
     }
     
+    /**
+     Get of set a column (copy).
+     - parameter column: the column index.
+    */
     public subscript(column column: Int) -> [Element] {
         get {
             var result = [Element](count: rows, repeatedValue: 0.0)
@@ -101,7 +130,84 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
             }
         }
     }
-
+    
+    /**
+     Get or set selected rows.
+     - parameter rowRange: the range for rows.
+     - returns: a Matrix with only the selected rows.
+     */
+    public subscript(rows rowRange: Range<Int>) -> Matrix<T> {
+        get {
+            assert( rowRange.startIndex >= 0 )
+            assert( rowRange.endIndex <= rows )
+            assert( rowRange.startIndex < rowRange.endIndex )
+            var result = Matrix<T>(rows: rowRange.count, columns: columns, repeatedValue: 0.0)
+            for (i, row) in rowRange.enumerate() {
+                result[i] = self[row]
+            }
+            return result
+        }
+        
+        set {
+            assert( rowRange.startIndex >= 0 )
+            assert( rowRange.endIndex <= rows )
+            assert( rowRange.startIndex < rowRange.endIndex )
+            assert( newValue.rows == rowRange.count )
+            assert( newValue.columns == columns )
+            for (i, row) in rowRange.enumerate() {
+                self[row] = newValue[i]
+            }
+        }
+    }
+    
+    /**
+     Get or set a submatrix.
+     - parameter rowRange: the range for rows.
+     - parameter columnRange: the range for columns.
+     - return: a Matrix with only the selected rows and columns.
+     */
+    public subscript(rows rowRange: Range<Int>, cols columnRange: Range<Int>) -> Matrix<T> {
+        get {
+            assert( rowRange.startIndex >= 0 )
+            assert( rowRange.endIndex <= rows )
+            assert( rowRange.startIndex < rowRange.endIndex )
+            assert( columnRange.startIndex >= 0 )
+            assert( columnRange.endIndex <= columns )
+            assert( columnRange.startIndex < columnRange.endIndex )
+            var result = Matrix<T>(rows: rowRange.count, columns: columnRange.count, repeatedValue: 0.0)
+            for (i, row) in rowRange.enumerate() {
+                let elements: [Element] = self[row]
+                for (j, column) in columnRange.enumerate() {
+                    result[i, j] = elements[j]
+                }
+            }
+            return result
+        }
+        
+        set {
+            assert( rowRange.startIndex >= 0 )
+            assert( rowRange.endIndex <= rows )
+            assert( rowRange.startIndex < rowRange.endIndex )
+            assert( columnRange.startIndex >= 0 )
+            assert( columnRange.endIndex <= columns )
+            assert( columnRange.startIndex < columnRange.endIndex )
+            assert( newValue.rows == rowRange.count )
+            assert( newValue.columns == columnRange.count)
+            for (i, row) in rowRange.enumerate() {
+                let elements: [Element] = newValue[i]
+                for (j, column) in columnRange.enumerate() {
+                    self[row, column] = elements[j]
+                }
+            }
+        }
+    }
+    
+    /**
+     Check if (row,column) is not out of bounds for this matrix.
+     - parameter row: the row indice
+     - parameter column: the column indice
+     - returns: true if (row, column) are valid indices, false otherwise
+    */
     private func indexIsValidForRow(row: Int, column: Int) -> Bool {
         return row >= 0 && row < rows && column >= 0 && column < columns
     }
@@ -162,6 +268,12 @@ public func ==<T> (lhs: Matrix<T>, rhs: Matrix<T>) -> Bool {
 
 // MARK: -
 
+/**
+ Matrix addition.
+ - parameter x: a Matrix
+ - parameter y: a Matrix
+ - returns: x + y  (element-wise, newly allocated)
+ */
 public func add(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
     precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with addition")
 
@@ -171,6 +283,12 @@ public func add(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
     return results
 }
 
+/**
+ Matrix addition.
+ - parameter x: a Matrix
+ - parameter y: a Matrix
+ - returns: x + y  (element-wise, newly allocated)
+ */
 public func add(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
     precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with addition")
 
@@ -180,6 +298,42 @@ public func add(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
     return results
 }
 
+/**
+ Matrix subtraction.
+ - parameter x: a Matrix
+ - parameter y: a Matrix
+ - returns: x - y  (element-wise, newly allocated)
+ */
+public func sub(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
+    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with addition")
+    
+    var results = x
+    cblas_saxpy(Int32(y.grid.count), -1.0, y.grid, 1, &(results.grid), 1)
+    
+    return results
+}
+
+/**
+ Matrix subtraction.
+ - parameter x: a Matrix
+ - parameter y: a Matrix
+ - returns: x - y  (element-wise, newly allocated)
+ */
+public func sub(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
+    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with addition")
+    
+    var results = x
+    cblas_daxpy(Int32(y.grid.count), -1.0, y.grid, 1, &(results.grid), 1)
+    
+    return results
+}
+
+/**
+ Matrix multiplication by a scalar.
+ - parameter alpha: a Float
+ - parameter x: a Matrix
+ - returns: x * alpha  (element-wise, newly allocated)
+ */
 public func mul(alpha: Float, x: Matrix<Float>) -> Matrix<Float> {
     var results = x
     cblas_sscal(Int32(x.grid.count), alpha, &(results.grid), 1)
@@ -187,6 +341,12 @@ public func mul(alpha: Float, x: Matrix<Float>) -> Matrix<Float> {
     return results
 }
 
+/**
+ Matrix multiplication by a scalar.
+ - parameter alpha: a Double
+ - parameter x: a Matrix
+ - returns: x * alpha  (element-wise, newly allocated)
+ */
 public func mul(alpha: Double, x: Matrix<Double>) -> Matrix<Double> {
     var results = x
     cblas_dscal(Int32(x.grid.count), alpha, &(results.grid), 1)
@@ -194,6 +354,12 @@ public func mul(alpha: Double, x: Matrix<Double>) -> Matrix<Double> {
     return results
 }
 
+/**
+ Matrix-Matrix multiplication (NOT element-wise).
+ - parameter x: a Matrix
+ - parameter y: a Matrix
+ - returns: x * y  (NOT element-wise, newly allocated)
+ */
 public func mul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
     precondition(x.columns == y.rows, "Matrix dimensions not compatible with multiplication")
 
@@ -203,6 +369,12 @@ public func mul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
     return results
 }
 
+/**
+ Matrix-Matrix multiplication (NOT element-wise).
+ - parameter x: a Matrix
+ - parameter y: a Matrix
+ - returns: x * y  (NOT element-wise, newly allocated)
+ */
 public func mul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
     precondition(x.columns == y.rows, "Matrix dimensions not compatible with multiplication")
 
@@ -212,6 +384,12 @@ public func mul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
     return results
 }
 
+/**
+ Matrix-Matrix multiplication (element-wise).
+ - parameter x: a Matrix
+ - parameter y: a Matrix
+ - returns: x * y  (element-wise, newly allocated)
+ */
 public func elmul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
     precondition(x.rows == y.rows && x.columns == y.columns, "Matrix must have the same dimensions")
     var result = Matrix<Double>(rows: x.rows, columns: x.columns, repeatedValue: 0.0)
@@ -219,6 +397,12 @@ public func elmul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
     return result
 }
 
+/**
+ Matrix-Matrix multiplication (element-wise).
+ - parameter x: a Matrix
+ - parameter y: a Matrix
+ - returns: x * y  (element-wise, newly allocated)
+ */
 public func elmul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
     precondition(x.rows == y.rows && x.columns == y.columns, "Matrix must have the same dimensions")
     var result = Matrix<Float>(rows: x.rows, columns: x.columns, repeatedValue: 0.0)
@@ -226,42 +410,83 @@ public func elmul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
     return result
 }
 
+/**
+ Matrix-Matrix division (NOT element-wise).
+ - parameter x: a Matrix
+ - parameter y: a Matrix
+ - returns: x * 1/y  (NOT element-wise, newly allocated)
+ */
 public func div(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
     let yInv = inv(y)
     precondition(x.columns == yInv.rows, "Matrix dimensions not compatible")
     return mul(x, y: yInv)
 }
 
+/**
+ Matrix-Matrix division (NOT element-wise).
+ - parameter x: a Matrix
+ - parameter y: a Matrix
+ - returns: x * 1/y  (NOT element-wise, newly allocated)
+ */
 public func div(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
     let yInv = inv(y)
     precondition(x.columns == yInv.rows, "Matrix dimensions not compatible")
     return mul(x, y: yInv)
 }
 
+/**
+ Matrix pow (element-wise).
+ - parameter x: a Matrix
+ - parameter y: a Double
+ - returns: x^y  (element-wise, newly allocated)
+ */
 public func pow(x: Matrix<Double>, _ y: Double) -> Matrix<Double> {
     var result = Matrix<Double>(rows: x.rows, columns: x.columns, repeatedValue: 0.0)
     result.grid = pow(x.grid, y)
     return result
 }
 
+/**
+ Matrix pow (element-wise).
+ - parameter x: a Matrix
+ - parameter y: a Double
+ - returns: x^y  (element-wise, newly allocated)
+ */
 public func pow(x: Matrix<Float>, _ y: Float) -> Matrix<Float> {
     var result = Matrix<Float>(rows: x.rows, columns: x.columns, repeatedValue: 0.0)
     result.grid = pow(x.grid, y)
     return result
 }
 
+/**
+ Matrix exponential (element-wise).
+ - parameter x: a Matrix
+ - returns: exp(x)  (element-wise, newly allocated)
+ */
 public func exp(x: Matrix<Double>) -> Matrix<Double> {
     var result = Matrix<Double>(rows: x.rows, columns: x.columns, repeatedValue: 0.0)
     result.grid = exp(x.grid)
     return result
 }
 
+/**
+ Matrix exponential (element-wise).
+ - parameter x: a Matrix
+ - returns: exp(x)  (element-wise, newly allocated)
+ */
 public func exp(x: Matrix<Float>) -> Matrix<Float> {
     var result = Matrix<Float>(rows: x.rows, columns: x.columns, repeatedValue: 0.0)
     result.grid = exp(x.grid)
     return result
 }
 
+/**
+ Matrix summation.
+ - parameter x: a Matrix
+ - parameter axies: .Column sums along columns, .Row sums along rows.
+ - returns: the sum of columns, resp. rows as a column matrix,
+   resp. a row matrix (element-wise, newly allocated)
+ */
 public func sum(x: Matrix<Double>, axies: MatrixAxies = .Column) -> Matrix<Double> {
     
     switch axies {
@@ -275,12 +500,44 @@ public func sum(x: Matrix<Double>, axies: MatrixAxies = .Column) -> Matrix<Doubl
     case .Row:
         var result = Matrix<Double>(rows: x.rows, columns: 1, repeatedValue: 0.0)
         for i in 0..<x.rows {
-            result.grid[i] = sum(x[row: i])
+            result.grid[i] = sum(x[i])
         }
         return result
     }
 }
 
+/**
+ Matrix summation.
+ - parameter x: a Matrix
+ - parameter axies: .Column sums along columns, .Row sums along rows.
+ - returns: the sum of columns, resp. rows as a column matrix,
+ resp. a row matrix (element-wise, newly allocated)
+ */
+public func sum(x: Matrix<Float>, axies: MatrixAxies = .Column) -> Matrix<Float> {
+    
+    switch axies {
+    case .Column:
+        var result = Matrix<Float>(rows: 1, columns: x.columns, repeatedValue: 0.0)
+        for i in 0..<x.columns {
+            result.grid[i] = sum(x[column: i])
+        }
+        return result
+        
+    case .Row:
+        var result = Matrix<Float>(rows: x.rows, columns: 1, repeatedValue: 0.0)
+        for i in 0..<x.rows {
+            result.grid[i] = sum(x[i])
+        }
+        return result
+    }
+}
+
+/**
+ Matrix inversion (NOT element-wise).
+ - parameter x: a Matrix
+ - returns: 1/x (NOT element-wise, newly allocated)
+ - remark: implementation asserts matrix is non-singular.
+ */
 public func inv(x : Matrix<Float>) -> Matrix<Float> {
     precondition(x.rows == x.columns, "Matrix must be square")
 
@@ -300,6 +557,12 @@ public func inv(x : Matrix<Float>) -> Matrix<Float> {
     return results
 }
 
+/**
+ Matrix inversion (NOT element-wise).
+ - parameter x: a Matrix
+ - returns: 1/x (NOT element-wise, newly allocated)
+ - remark: implementation asserts matrix is non-singular.
+ */
 public func inv(x : Matrix<Double>) -> Matrix<Double> {
     precondition(x.rows == x.columns, "Matrix must be square")
 
@@ -319,6 +582,11 @@ public func inv(x : Matrix<Double>) -> Matrix<Double> {
     return results
 }
 
+/**
+ Matrix transpose (copy).
+ - parameter x: a Matrix
+ - returns: x' (newly allocated)
+ */
 public func transpose(x: Matrix<Float>) -> Matrix<Float> {
     var results = Matrix<Float>(rows: x.columns, columns: x.rows, repeatedValue: 0.0)
     vDSP_mtrans(x.grid, 1, &(results.grid), 1, vDSP_Length(results.rows), vDSP_Length(results.columns))
@@ -326,6 +594,11 @@ public func transpose(x: Matrix<Float>) -> Matrix<Float> {
     return results
 }
 
+/**
+ Matrix transpose (copy).
+ - parameter x: a Matrix
+ - returns: x' (newly allocated)
+ */
 public func transpose(x: Matrix<Double>) -> Matrix<Double> {
     var results = Matrix<Double>(rows: x.columns, columns: x.rows, repeatedValue: 0.0)
     vDSP_mtransD(x.grid, 1, &(results.grid), 1, vDSP_Length(results.rows), vDSP_Length(results.columns))
@@ -341,6 +614,14 @@ public func + (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
 
 public func + (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
     return add(lhs, y: rhs)
+}
+
+public func - (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
+    return sub(lhs, y: rhs)
+}
+
+public func - (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
+    return sub(lhs, y: rhs)
 }
 
 public func * (lhs: Float, rhs: Matrix<Float>) -> Matrix<Float> {

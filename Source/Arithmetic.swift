@@ -24,6 +24,11 @@ import Accelerate
 
 // MARK: Sum
 
+/**
+ Sum elements of an Array.
+ - parameter x: the array to sum over.
+ - returns: x[0] + ... + x[x.count-1]
+ */
 public func sum(x: [Float]) -> Float {
     var result: Float = 0.0
     vDSP_sve(x, 1, &result, vDSP_Length(x.count))
@@ -31,6 +36,11 @@ public func sum(x: [Float]) -> Float {
     return result
 }
 
+/**
+ Sum elements of an Array.
+ - parameter x: the array to sum over.
+ - returns: x[0] + ... + x[x.count-1]
+ */
 public func sum(x: [Double]) -> Double {
     var result: Double = 0.0
     vDSP_sveD(x, 1, &result, vDSP_Length(x.count))
@@ -40,16 +50,31 @@ public func sum(x: [Double]) -> Double {
 
 // MARK: Sum of Absolute Values
 
+/**
+ Sum the absolute values of an Array.
+ - parameter x: the array to sum over.
+ - returns: abs(|x[0]) + ... + abs(x[x.count-1])
+*/
 public func asum(x: [Float]) -> Float {
     return cblas_sasum(Int32(x.count), x, 1)
 }
 
+/**
+ Sum the absolute values of an Array.
+ - parameter x: the array to sum over.
+ - returns: abs(|x[0]) + ... + abs(x[x.count-1])
+ */
 public func asum(x: [Double]) -> Double {
     return cblas_dasum(Int32(x.count), x, 1)
 }
 
 // MARK: Maximum
 
+/**
+ The maximum value of an array.
+ - parameter x: the input array.
+ - returns: m such that exists i, x[i] == m and forall i, x[i] <= m.
+ */
 public func max(x: [Float]) -> Float {
     var result: Float = 0.0
     vDSP_maxv(x, 1, &result, vDSP_Length(x.count))
@@ -57,6 +82,11 @@ public func max(x: [Float]) -> Float {
     return result
 }
 
+/**
+ The maximum value of an array.
+ - parameter x: the input array.
+ - returns: m such that exists i, x[i] == m and forall i, x[i] <= m.
+ */
 public func max(x: [Double]) -> Double {
     var result: Double = 0.0
     vDSP_maxvD(x, 1, &result, vDSP_Length(x.count))
@@ -66,6 +96,11 @@ public func max(x: [Double]) -> Double {
 
 // MARK: Minimum
 
+/**
+ The minimum value of an array.
+ - parameter x: the input array.
+ - returns: m such that exists i, x[i] == m and forall i, x[i] >= m
+ */
 public func min(x: [Float]) -> Float {
     var result: Float = 0.0
     vDSP_minv(x, 1, &result, vDSP_Length(x.count))
@@ -73,6 +108,11 @@ public func min(x: [Float]) -> Float {
     return result
 }
 
+/**
+ The minimum value of an array.
+ - parameter x: the input array.
+ - returns: m such that exists i, x[i] == m and forall i, x[i] >= m
+ */
 public func min(x: [Double]) -> Double {
     var result: Double = 0.0
     vDSP_minvD(x, 1, &result, vDSP_Length(x.count))
@@ -82,6 +122,11 @@ public func min(x: [Double]) -> Double {
 
 // MARK: Mean
 
+/**
+ The mean value of an array.
+ - parameter x: the input array.
+ - returns: (x[0] + ... + x[x.count-1]) / x.count
+ */
 public func mean(x: [Float]) -> Float {
     var result: Float = 0.0
     vDSP_meanv(x, 1, &result, vDSP_Length(x.count))
@@ -89,6 +134,11 @@ public func mean(x: [Float]) -> Float {
     return result
 }
 
+/**
+ The mean value of an array.
+ - parameter x: the input array.
+ - returns: (x[0] + ... + x[x.count-1]) / x.count
+ */
 public func mean(x: [Double]) -> Double {
     var result: Double = 0.0
     vDSP_meanvD(x, 1, &result, vDSP_Length(x.count))
@@ -98,6 +148,11 @@ public func mean(x: [Double]) -> Double {
 
 // MARK: Mean Magnitude
 
+/**
+ The mean magnitude of an array.
+ - parameter x: the input array.
+ - returns: ( abs(x[0]) + ... + abs(x[x.count-1]) ) / x.count
+ */
 public func meamg(x: [Float]) -> Float {
     var result: Float = 0.0
     vDSP_meamgv(x, 1, &result, vDSP_Length(x.count))
@@ -105,6 +160,11 @@ public func meamg(x: [Float]) -> Float {
     return result
 }
 
+/**
+ The mean magnitude of an array.
+ - parameter x: the input array.
+ - returns: ( abs(x[0]) + ... + abs(x[x.count-1]) ) / x.count
+ */
 public func meamg(x: [Double]) -> Double {
     var result: Double = 0.0
     vDSP_meamgvD(x, 1, &result, vDSP_Length(x.count))
@@ -114,6 +174,11 @@ public func meamg(x: [Double]) -> Double {
 
 // MARK: Mean Square Value
 
+/**
+ The mean squared  value of an array.
+ - parameter x: the input array.
+ - returns: ( x[0]^2 + ... + x[x.count-1]^2 ) / x.count
+ */
 public func measq(x: [Float]) -> Float {
     var result: Float = 0.0
     vDSP_measqv(x, 1, &result, vDSP_Length(x.count))
@@ -121,6 +186,11 @@ public func measq(x: [Float]) -> Float {
     return result
 }
 
+/**
+ The mean squared  value of an array.
+ - parameter x: the input array.
+ - returns: ( x[0]^2 + ... + x[x.count-1]^2 ) / x.count
+ */
 public func measq(x: [Double]) -> Double {
     var result: Double = 0.0
     vDSP_measqvD(x, 1, &result, vDSP_Length(x.count))
@@ -130,6 +200,12 @@ public func measq(x: [Double]) -> Double {
 
 // MARK: Add
 
+/**
+ Element-wise array addition.
+ - parameter x: an Array
+ - parameter y: an Array
+ - returns: newly allocated x + y
+ */
 public func add(x: [Float], y: [Float]) -> [Float] {
     var results = [Float](y)
     cblas_saxpy(Int32(x.count), 1.0, x, 1, &results, 1)
@@ -137,6 +213,12 @@ public func add(x: [Float], y: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Element-wise array addition.
+ - parameter x: an Array
+ - parameter y: an Array
+ - returns: newly allocated x + y
+ */
 public func add(x: [Double], y: [Double]) -> [Double] {
     var results = [Double](y)
     cblas_daxpy(Int32(x.count), 1.0, x, 1, &results, 1)
@@ -146,6 +228,12 @@ public func add(x: [Double], y: [Double]) -> [Double] {
 
 // MARK: Subtraction
 
+/**
+ Element-wise array subtraction.
+ - parameter x: an Array
+ - parameter y: an Array
+ - returns: newly allocated x - y
+ */
 public func sub(x: [Float], y: [Float]) -> [Float] {
     var results = [Float](y)
     catlas_saxpby(Int32(x.count), 1.0, x, 1, -1, &results, 1)
@@ -153,6 +241,12 @@ public func sub(x: [Float], y: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Element-wise array subtraction.
+ - parameter x: an Array
+ - parameter y: an Array
+ - returns: newly allocated x - y
+ */
 public func sub(x: [Double], y: [Double]) -> [Double] {
     var results = [Double](y)
     catlas_daxpby(Int32(x.count), 1.0, x, 1, -1, &results, 1)
@@ -162,6 +256,12 @@ public func sub(x: [Double], y: [Double]) -> [Double] {
 
 // MARK: Multiply
 
+/**
+ Element-wise array multiplication.
+ - parameter x: an Array
+ - parameter y: an Array
+ - returns: newly allocated x * y
+ */
 public func mul(x: [Float], y: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vDSP_vmul(x, 1, y, 1, &results, 1, vDSP_Length(x.count))
@@ -169,6 +269,12 @@ public func mul(x: [Float], y: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Element-wise array multiplication.
+ - parameter x: an Array
+ - parameter y: an Array
+ - returns: newly allocated x * y
+ */
 public func mul(x: [Double], y: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vDSP_vmulD(x, 1, y, 1, &results, 1, vDSP_Length(x.count))
@@ -178,6 +284,12 @@ public func mul(x: [Double], y: [Double]) -> [Double] {
 
 // MARK: Divide
 
+/**
+ Element-wise array division.
+ - parameter x: an Array
+ - parameter y: an Array
+ - returns: newly allocated x / y
+ */
 public func div(x: [Float], y: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvdivf(&results, x, y, [Int32(x.count)])
@@ -185,14 +297,18 @@ public func div(x: [Float], y: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Element-wise array division.
+ - parameter x: an Array
+ - parameter y: an Array
+ - returns: newly allocated x / y
+ */
 public func div(x: [Double], y: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvdiv(&results, x, y, [Int32(x.count)])
 
     return results
 }
-
-// MARK: Modulo
 
 public func mod(x: [Float], y: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
@@ -226,6 +342,11 @@ public func remainder(x: [Double], y: [Double]) -> [Double] {
 
 // MARK: Square Root
 
+/**
+ Element-wise square root.
+ - parameter x: an Array
+ - returns: newly allocated sqrt(x)
+ */
 public func sqrt(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvsqrtf(&results, x, [Int32(x.count)])
@@ -233,6 +354,11 @@ public func sqrt(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Element-wise square root.
+    - parameter x: an Array
+    - returns: newly allocated sqrt(x)
+*/
 public func sqrt(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvsqrt(&results, x, [Int32(x.count)])
@@ -242,6 +368,13 @@ public func sqrt(x: [Double]) -> [Double] {
 
 // MARK: Dot Product
 
+/**
+ Dot product of x and y.
+ - parameter x: an Array
+ - parameter y: an Array
+ - precondition: x.count == y.count
+ - returns: sum( x[0] * y[0] + ... + x[count-1] * y[count-1])
+*/
 public func dot(x: [Float], y: [Float]) -> Float {
     precondition(x.count == y.count, "Vectors must have equal count")
 
@@ -251,7 +384,13 @@ public func dot(x: [Float], y: [Float]) -> Float {
     return result
 }
 
-
+/**
+ Dot product of x and y.
+ - parameter x: an Array
+ - parameter y: an Array
+ - precondition: x.count == y.count
+ - returns: sum( x[0] * y[0] + ... + x[count-1] * y[count-1])
+ */
 public func dot(x: [Double], y: [Double]) -> Double {
     precondition(x.count == y.count, "Vectors must have equal count")
 
@@ -263,6 +402,13 @@ public func dot(x: [Double], y: [Double]) -> Double {
 
 // MARK: - Distance
 
+/**
+ Euclidean distance between x and y.
+ - parameter x: an Array
+ - parameter y: an Array
+ - precondition: x.count == y.count
+ - returns: sum( (x[0]-y[0])^2 + ... + (x[count-1]-y[count-1])^2 )
+ */
 public func dist(x: [Float], y: [Float]) -> Float {
     precondition(x.count == y.count, "Vectors must have equal count")
     let sub = x - y
@@ -272,6 +418,13 @@ public func dist(x: [Float], y: [Float]) -> Float {
     return sqrt(sum(squared))
 }
 
+/**
+ Euclidean distance between x and y.
+ - parameter x: an Array
+ - parameter y: an Array
+ - precondition: x.count == y.count
+ - returns: sum( (x[0]-y[0])^2 + ... + (x[count-1]-y[count-1])^2 )
+ */
 public func dist(x: [Double], y: [Double]) -> Double {
     precondition(x.count == y.count, "Vectors must have equal count")
     let sub = x - y
@@ -283,66 +436,162 @@ public func dist(x: [Double], y: [Double]) -> Double {
 
 // MARK: - Operators
 
+/**
+ Add lhs and rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs + rhs
+ */
 public func + (lhs: [Float], rhs: [Float]) -> [Float] {
     return add(lhs, y: rhs)
 }
 
+/**
+ Add lhs and rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs + rhs
+ */
 public func + (lhs: [Double], rhs: [Double]) -> [Double] {
     return add(lhs, y: rhs)
 }
 
+/**
+ Add lhs and rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: a Float.
+ - returns: newly allocated lhs + rhs
+ */
 public func + (lhs: [Float], rhs: Float) -> [Float] {
     return add(lhs, y: [Float](count: lhs.count, repeatedValue: rhs))
 }
 
+/**
+ Add lhs and rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: a Double.
+ - returns: newly allocated lhs + rhs
+ */
 public func + (lhs: [Double], rhs: Double) -> [Double] {
     return add(lhs, y: [Double](count: lhs.count, repeatedValue: rhs))
 }
 
+/**
+ Subtract rhs from lhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs - rhs
+ */
 public func - (lhs: [Float], rhs: [Float]) -> [Float] {
     return sub(lhs, y: rhs)
 }
 
+/**
+ Subtract rhs from lhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs - rhs
+ */
 public func - (lhs: [Double], rhs: [Double]) -> [Double] {
     return sub(lhs, y: rhs)
 }
 
+/**
+ Subtract rhs from lhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: a Float.
+ - returns: newly allocated lhs - rhs
+ */
 public func - (lhs: [Float], rhs: Float) -> [Float] {
     return sub(lhs, y: [Float](count: lhs.count, repeatedValue: rhs))
 }
 
+/**
+ Subtract rhs from lhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: a Double.
+ - returns: newly allocated lhs - rhs
+ */
 public func - (lhs: [Double], rhs: Double) -> [Double] {
     return sub(lhs, y: [Double](count: lhs.count, repeatedValue: rhs))
 }
 
+/**
+ Divide lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs / rhs
+ */
 public func / (lhs: [Float], rhs: [Float]) -> [Float] {
     return div(lhs, y: rhs)
 }
 
+/**
+ Divide lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs / rhs
+ */
 public func / (lhs: [Double], rhs: [Double]) -> [Double] {
     return div(lhs, y: rhs)
 }
 
+/**
+ Divide lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: a Float.
+ - returns: newly allocated lhs / rhs
+ */
 public func / (lhs: [Float], rhs: Float) -> [Float] {
     return div(lhs, y: [Float](count: lhs.count, repeatedValue: rhs))
 }
 
+/**
+ Divide lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: a Double.
+ - returns: newly allocated lhs / rhs
+ */
 public func / (lhs: [Double], rhs: Double) -> [Double] {
     return div(lhs, y: [Double](count: lhs.count, repeatedValue: rhs))
 }
 
+/**
+ Multiply lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs * rhs
+ */
 public func * (lhs: [Float], rhs: [Float]) -> [Float] {
     return mul(lhs, y: rhs)
 }
 
+/**
+ Multiply lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs * rhs
+ */
 public func * (lhs: [Double], rhs: [Double]) -> [Double] {
     return mul(lhs, y: rhs)
 }
 
+/**
+ Multiply lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: a Float.
+ - returns: newly allocated lhs * rhs
+ */
 public func * (lhs: [Float], rhs: Float) -> [Float] {
     return mul(lhs, y: [Float](count: lhs.count, repeatedValue: rhs))
 }
 
+/**
+ Multiply lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: a Double.
+ - returns: newly allocated lhs * rhs
+ */
 public func * (lhs: [Double], rhs: Double) -> [Double] {
     return mul(lhs, y: [Double](count: lhs.count, repeatedValue: rhs))
 }
@@ -363,11 +612,25 @@ public func % (lhs: [Double], rhs: Double) -> [Double] {
     return mod(lhs, y: [Double](count: lhs.count, repeatedValue: rhs))
 }
 
+/**
+ Dot product of lhs and rhs.
+ - parameter lhs: an Array
+ - parameter rhs: an Array
+ - precondition: lhs.count == rhs.count
+ - returns: sum( lhs[0] * rhs[0] + ... + lhs[count-1] * rhs[count-1])
+ */
 infix operator • {}
 public func • (lhs: [Double], rhs: [Double]) -> Double {
     return dot(lhs, y: rhs)
 }
 
+/**
+ Dot product of lhs and rhs.
+ - parameter lhs: an Array
+ - parameter rhs: an Array
+ - precondition: lhs.count == rhs.count
+ - returns: sum( lhs[0] * rhs[0] + ... + lhs[count-1] * rhs[count-1])
+ */
 public func • (lhs: [Float], rhs: [Float]) -> Float {
     return dot(lhs, y: rhs)
 }

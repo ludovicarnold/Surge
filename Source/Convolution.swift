@@ -25,7 +25,10 @@ import Accelerate
 
 // MARK: Convolution
 
-// Convolution of a signal [x], with a kernel [k]. The signal must be at least as long as the kernel.
+/**
+ Convolution of a signal [x], with a kernel [k].
+ - remark: The signal must be at least as long as the kernel.
+*/
 public func conv(x: [Float], _ k: [Float]) -> [Float] {
     precondition(x.count >= k.count, "Input vector [x] must have at least as many elements as the kernel,  [k]")
     
@@ -39,7 +42,10 @@ public func conv(x: [Float], _ k: [Float]) -> [Float] {
     return result
 }
 
-// Convolution of a signal [x], with a kernel [k]. The signal must be at least as long as the kernel.
+/**
+ Convolution of a signal [x], with a kernel [k].
+ - remark: The signal must be at least as long as the kernel.
+*/
 public func conv(x: [Double], _ k: [Double]) -> [Double] {
     precondition(x.count >= k.count, "Input vector [x] must have at least as many elements as the kernel,  [k]")
     
@@ -55,8 +61,10 @@ public func conv(x: [Double], _ k: [Double]) -> [Double] {
 
 // MARK: Cross-Correlation
 
-// Cross-correlation of a signal [x], with another signal [y]. The signal [y]
-// is padded so that it is the same length as [x].
+/**
+ Cross-correlation of a signal [x], with another signal [y].
+ - remark: The signal [y] is padded so that it is the same length as [x].
+*/
 public func xcorr(x: [Float], _ y: [Float]) -> [Float] {
     precondition(x.count >= y.count, "Input vector [x] must have at least as many elements as [y]")
     var yPadded = y
@@ -74,8 +82,10 @@ public func xcorr(x: [Float], _ y: [Float]) -> [Float] {
     return result
 }
 
-// Cross-correlation of a signal [x], with another signal [y]. The signal [y]
-// is padded so that it is the same length as [x].
+/**
+ Cross-correlation of a signal [x], with another signal [y].
+ - remark: The signal [y] is padded so that it is the same length as [x].
+*/
 public func xcorr(x: [Double], _ y: [Double]) -> [Double] {
     precondition(x.count >= y.count, "Input vector [x] must have at least as many elements as [y]")
     var yPadded = y
@@ -95,7 +105,9 @@ public func xcorr(x: [Double], _ y: [Double]) -> [Double] {
 
 // MARK: Auto-correlation
 
-// Auto-correlation of a signal [x]
+/**
+ Auto-correlation of a signal [x]
+*/
 public func xcorr(x: [Float]) -> [Float] {
     let resultSize = 2*x.count - 1
     var result = [Float](count: resultSize, repeatedValue: 0)
@@ -106,7 +118,9 @@ public func xcorr(x: [Float]) -> [Float] {
     return result
 }
 
-// Auto-correlation of a signal [x]
+/**
+ Auto-correlation of a signal [x]
+*/
 public func xcorr(x: [Double]) -> [Double] {
     let resultSize = 2*x.count - 1
     var result = [Double](count: resultSize, repeatedValue: 0)

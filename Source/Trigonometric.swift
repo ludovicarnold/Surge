@@ -24,6 +24,10 @@ import Accelerate
 
 // MARK: Sine-Cosine
 
+/**
+ (Sine, Cosine).
+ - returns: (sin(x), cos(x)) (element-wise,  newly allocated).
+ */
 public func sincos(x: [Float]) -> (sin: [Float], cos: [Float]) {
     var sin = [Float](count: x.count, repeatedValue: 0.0)
     var cos = [Float](count: x.count, repeatedValue: 0.0)
@@ -32,6 +36,10 @@ public func sincos(x: [Float]) -> (sin: [Float], cos: [Float]) {
     return (sin, cos)
 }
 
+/**
+ (Sine, Cosine).
+ - returns: (sin(x), cos(x)) (element-wise,  newly allocated).
+ */
 public func sincos(x: [Double]) -> (sin: [Double], cos: [Double]) {
     var sin = [Double](count: x.count, repeatedValue: 0.0)
     var cos = [Double](count: x.count, repeatedValue: 0.0)
@@ -42,6 +50,10 @@ public func sincos(x: [Double]) -> (sin: [Double], cos: [Double]) {
 
 // MARK: Sine
 
+/**
+ Sine.
+ - returns: sin(x) (element-wise,  newly allocated).
+ */
 public func sin(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvsinf(&results, x, [Int32(x.count)])
@@ -49,6 +61,10 @@ public func sin(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Sine.
+ - returns: sin(x) (element-wise,  newly allocated).
+ */
 public func sin(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvsin(&results, x, [Int32(x.count)])
@@ -58,6 +74,10 @@ public func sin(x: [Double]) -> [Double] {
 
 // MARK: Cosine
 
+/**
+ Cosine.
+ - returns: cos(x) (element-wise,  newly allocated).
+ */
 public func cos(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvcosf(&results, x, [Int32(x.count)])
@@ -65,6 +85,10 @@ public func cos(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Cosine.
+ - returns: cos(x) (element-wise,  newly allocated).
+ */
 public func cos(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvcos(&results, x, [Int32(x.count)])
@@ -74,6 +98,10 @@ public func cos(x: [Double]) -> [Double] {
 
 // MARK: Tangent
 
+/**
+ Tangent.
+ - returns: tan(x) (element-wise,  newly allocated).
+ */
 public func tan(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvtanf(&results, x, [Int32(x.count)])
@@ -81,6 +109,10 @@ public func tan(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Tangent.
+ - returns: tan(x) (element-wise,  newly allocated).
+ */
 public func tan(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvtan(&results, x, [Int32(x.count)])
@@ -90,6 +122,10 @@ public func tan(x: [Double]) -> [Double] {
 
 // MARK: Arcsine
 
+/**
+ Arcsine.
+ - returns: asin(x) (element-wise,  newly allocated).
+ */
 public func asin(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvasinf(&results, x, [Int32(x.count)])
@@ -97,6 +133,10 @@ public func asin(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Arcsine.
+ - returns: asin(x) (element-wise,  newly allocated).
+ */
 public func asin(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvasin(&results, x, [Int32(x.count)])
@@ -106,6 +146,10 @@ public func asin(x: [Double]) -> [Double] {
 
 // MARK: Arccosine
 
+/**
+ Arccosine.
+ - returns: acos(x) (element-wise,  newly allocated).
+ */
 public func acos(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvacosf(&results, x, [Int32(x.count)])
@@ -113,6 +157,10 @@ public func acos(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Arccosine.
+ - returns: acos(x) (element-wise,  newly allocated).
+ */
 public func acos(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvacos(&results, x, [Int32(x.count)])
@@ -122,6 +170,10 @@ public func acos(x: [Double]) -> [Double] {
 
 // MARK: Arctangent
 
+/**
+ Arctangent.
+ - returns: atan(x) (element-wise,  newly allocated).
+ */
 public func atan(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvatanf(&results, x, [Int32(x.count)])
@@ -129,6 +181,10 @@ public func atan(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Arctangent.
+ - returns: atan(x) (element-wise,  newly allocated).
+ */
 public func atan(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvatan(&results, x, [Int32(x.count)])
@@ -140,6 +196,9 @@ public func atan(x: [Double]) -> [Double] {
 
 // MARK: Radians to Degrees
 
+/**
+ Radians to Degrees (element-wise,  newly allocated).
+ */
 func rad2deg(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     let divisor = [Float](count: x.count, repeatedValue: Float(M_PI / 180.0))
@@ -148,6 +207,9 @@ func rad2deg(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Radians to Degrees (element-wise,  newly allocated).
+ */
 func rad2deg(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     let divisor = [Double](count: x.count, repeatedValue: M_PI / 180.0)
@@ -158,6 +220,9 @@ func rad2deg(x: [Double]) -> [Double] {
 
 // MARK: Degrees to Radians
 
+/**
+ Degrees to Radians (element-wise,  newly allocated).
+ */
 func deg2rad(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     let divisor = [Float](count: x.count, repeatedValue: Float(180.0 / M_PI))
@@ -166,6 +231,9 @@ func deg2rad(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Degrees to Radians (element-wise,  newly allocated).
+ */
 func deg2rad(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     let divisor = [Double](count: x.count, repeatedValue: 180.0 / M_PI)

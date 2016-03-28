@@ -24,6 +24,10 @@ import Accelerate
 
 // MARK: Exponentiation
 
+/**
+ Exponential.
+ - returns: exp(x) (element-wise,  newly allocated).
+ */
 public func exp(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvexpf(&results, x, [Int32(x.count)])
@@ -31,6 +35,10 @@ public func exp(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Exponential.
+ - returns: exp(x) (element-wise,  newly allocated).
+ */
 public func exp(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvexp(&results, x, [Int32(x.count)])
@@ -40,6 +48,10 @@ public func exp(x: [Double]) -> [Double] {
 
 // MARK: Square Exponentiation
 
+/**
+ Square exponentiation.
+ - returns: 2^x (element-wise,  newly allocated).
+*/
 public func exp2(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvexp2f(&results, x, [Int32(x.count)])
@@ -47,6 +59,10 @@ public func exp2(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Square exponentiation.
+ - returns: 2^x (element-wise,  newly allocated).
+ */
 public func exp2(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvexp2(&results, x, [Int32(x.count)])
@@ -56,6 +72,10 @@ public func exp2(x: [Double]) -> [Double] {
 
 // MARK: Natural Logarithm
 
+/**
+ Natural logarigthm.
+ - returns: ln(x) (element-wise,  newly allocated).
+*/
 public func log(x: [Float]) -> [Float] {
     var results = [Float](x)
     vvlogf(&results, x, [Int32(x.count)])
@@ -63,6 +83,10 @@ public func log(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Natural logarigthm.
+ - returns: ln(x) (element-wise,  newly allocated).
+ */
 public func log(x: [Double]) -> [Double] {
     var results = [Double](x)
     vvlog(&results, x, [Int32(x.count)])
@@ -72,6 +96,10 @@ public func log(x: [Double]) -> [Double] {
 
 // MARK: Base-2 Logarithm
 
+/**
+ Base-2 logarithm.
+ - returns: log2(x) (element-wise,  newly allocated).
+*/
 public func log2(x: [Float]) -> [Float] {
     var results = [Float](x)
     vvlog2f(&results, x, [Int32(x.count)])
@@ -79,6 +107,10 @@ public func log2(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Base-2 logarithm.
+ - returns: log2(x) (element-wise,  newly allocated).
+ */
 public func log2(x: [Double]) -> [Double] {
     var results = [Double](x)
     vvlog2(&results, x, [Int32(x.count)])
@@ -88,6 +120,10 @@ public func log2(x: [Double]) -> [Double] {
 
 // MARK: Base-10 Logarithm
 
+/**
+ Base-10 logarithm.
+ - returns: log10(x) (element-wise,  newly allocated).
+ */
 public func log10(x: [Float]) -> [Float] {
     var results = [Float](x)
     vvlog10f(&results, x, [Int32(x.count)])
@@ -95,6 +131,10 @@ public func log10(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Base-10 logarithm.
+ - returns: log10(x) (element-wise,  newly allocated).
+ */
 public func log10(x: [Double]) -> [Double] {
     var results = [Double](x)
     vvlog10(&results, x, [Int32(x.count)])

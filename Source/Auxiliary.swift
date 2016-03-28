@@ -24,6 +24,10 @@ import Accelerate
 
 // MARK: Absolute Value
 
+/**
+ Absolute value of an Array.
+ - returns: |x| (element-wise,  newly allocated).
+*/
 public func abs(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvfabs(&results, x, [Int32(x.count)])
@@ -31,6 +35,10 @@ public func abs(x: [Double]) -> [Double] {
     return results
 }
 
+/**
+ Absolute value of an Array.
+ - returns: |x| (element-wise,  newly allocated).
+ */
 public func abs(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvfabsf(&results, x, [Int32(x.count)])
@@ -40,6 +48,10 @@ public func abs(x: [Float]) -> [Float] {
 
 // MARK: Ceiling
 
+/**
+ Ceiling of an Array.
+ - returns: ceil(x) (element-wise,  newly allocated).
+ */
 public func ceil(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvceilf(&results, x, [Int32(x.count)])
@@ -47,6 +59,10 @@ public func ceil(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Ceiling of an Array.
+ - returns: ceil(x) (element-wise,  newly allocated)
+ */
 public func ceil(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvceil(&results, x, [Int32(x.count)])
@@ -56,6 +72,13 @@ public func ceil(x: [Double]) -> [Double] {
 
 // MARK: Clip
 
+/**
+ Clip values of an Array between low and high (element-wise,  newly allocated).
+ - returns: y = clip(x) such that:
+     * y[i] == x[i] if low <= x[i] <= high
+     * y[i] == low  if x[i] < low
+     * y[i] == high if x[i] > high
+ */
 public func clip(x: [Float], low: Float, high: Float) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0), y = low, z = high
     vDSP_vclip(x, 1, &y, &z, &results, 1, vDSP_Length(x.count))
@@ -63,6 +86,13 @@ public func clip(x: [Float], low: Float, high: Float) -> [Float] {
     return results
 }
 
+/**
+ Clip values of an Array between low and high (element-wise,  newly allocated).
+ - returns: y = clip(x) such that:
+     * y[i] == x[i] if low <= x[i] <= high
+     * y[i] == low  if x[i] < low
+     * y[i] == high if x[i] > high
+ */
 public func clip(x: [Double], low: Double, high: Double) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0), y = low, z = high
     vDSP_vclipD(x, 1, &y, &z, &results, 1, vDSP_Length(x.count))
@@ -72,6 +102,9 @@ public func clip(x: [Double], low: Double, high: Double) -> [Double] {
 
 // MARK: Copy Sign
 
+/**
+ An array with given magnitude and sign (element-wise,  newly allocated).
+ */
 public func copysign(sign: [Float], magnitude: [Float]) -> [Float] {
     var results = [Float](count: sign.count, repeatedValue: 0.0)
     vvcopysignf(&results, magnitude, sign, [Int32(sign.count)])
@@ -79,6 +112,9 @@ public func copysign(sign: [Float], magnitude: [Float]) -> [Float] {
     return results
 }
 
+/**
+ An array with given magnitude and sign (element-wise,  newly allocated).
+ */
 public func copysign(sign: [Double], magnitude: [Double]) -> [Double] {
     var results = [Double](count: sign.count, repeatedValue: 0.0)
     vvcopysign(&results, magnitude, sign, [Int32(sign.count)])
@@ -88,6 +124,10 @@ public func copysign(sign: [Double], magnitude: [Double]) -> [Double] {
 
 // MARK: Floor
 
+/**
+ Floor of an Array.
+ - returns: floor(x) (element-wise,  newly allocated).
+ */
 public func floor(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvfloorf(&results, x, [Int32(x.count)])
@@ -95,6 +135,10 @@ public func floor(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Floor of an Array.
+ - returns: floor(x) (element-wise,  newly allocated).
+ */
 public func floor(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvfloor(&results, x, [Int32(x.count)])
@@ -104,6 +148,10 @@ public func floor(x: [Double]) -> [Double] {
 
 // MARK: Negate
 
+/**
+ Opposite of an Array.
+ - returns: -x (element-wise,  newly allocated).
+ */
 public func neg(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vDSP_vneg(x, 1, &results, 1, vDSP_Length(x.count))
@@ -111,6 +159,10 @@ public func neg(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Opposite of an Array.
+ - returns: -x (element-wise,  newly allocated).
+ */
 public func neg(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vDSP_vnegD(x, 1, &results, 1, vDSP_Length(x.count))
@@ -120,6 +172,10 @@ public func neg(x: [Double]) -> [Double] {
 
 // MARK: Reciprocal
 
+/**
+ Reciprocal of an Array.
+ - returns: 1/x (element-wise,  newly allocated).
+ */
 public func rec(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvrecf(&results, x, [Int32(x.count)])
@@ -127,6 +183,10 @@ public func rec(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Reciprocal of an Array.
+ - returns: 1/x (element-wise,  newly allocated).
+ */
 public func rec(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvrec(&results, x, [Int32(x.count)])
@@ -136,6 +196,10 @@ public func rec(x: [Double]) -> [Double] {
 
 // MARK: Round
 
+/**
+ Round an Array to the nearest integer.
+  - returns: round(x) (element-wise,  newly allocated).
+ */
 public func round(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvnintf(&results, x, [Int32(x.count)])
@@ -143,6 +207,10 @@ public func round(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Round an Array to the nearest integer.
+ - returns: round(x) (element-wise,  newly allocated).
+ */
 public func round(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvnint(&results, x, [Int32(x.count)])
@@ -152,6 +220,9 @@ public func round(x: [Double]) -> [Double] {
 
 // MARK: Threshold
 
+/**
+ Maximum of x and low (element-wise,  newly allocated).
+ */
 public func threshold(x: [Float], low: Float) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0), y = low
     vDSP_vthr(x, 1, &y, &results, 1, vDSP_Length(x.count))
@@ -159,6 +230,9 @@ public func threshold(x: [Float], low: Float) -> [Float] {
     return results
 }
 
+/**
+ Maximum of x and low (element-wise,  newly allocated).
+ */
 public func threshold(x: [Double], low: Double) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0), y = low
     vDSP_vthrD(x, 1, &y, &results, 1, vDSP_Length(x.count))
@@ -168,6 +242,9 @@ public func threshold(x: [Double], low: Double) -> [Double] {
 
 // MARK: Truncate
 
+/**
+ Integer trucation of an Array (element-wise, newly allocated).
+ */
 public func trunc(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvintf(&results, x, [Int32(x.count)])
@@ -175,6 +252,9 @@ public func trunc(x: [Float]) -> [Float] {
     return results
 }
 
+/**
+ Integer trucation of an Array (element-wise,  newly allocated).
+ */
 public func trunc(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvint(&results, x, [Int32(x.count)])
