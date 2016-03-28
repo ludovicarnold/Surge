@@ -533,6 +533,58 @@ public func sum(x: Matrix<Float>, axies: MatrixAxies = .Column) -> Matrix<Float>
 }
 
 /**
+ Matrix absolute summation.
+ - parameter x: a Matrix
+ - parameter axies: .Column sums along columns, .Row sums along rows.
+ - returns: the absolute sum of columns, resp. rows as a column matrix,
+ resp. a row matrix (element-wise, newly allocated)
+ */
+public func asum(x: Matrix<Double>, axies: MatrixAxies = .Column) -> Matrix<Double> {
+    
+    switch axies {
+    case .Column:
+        var result = Matrix<Double>(rows: 1, columns: x.columns, repeatedValue: 0.0)
+        for i in 0..<x.columns {
+            result.grid[i] = asum(x[column: i])
+        }
+        return result
+        
+    case .Row:
+        var result = Matrix<Double>(rows: x.rows, columns: 1, repeatedValue: 0.0)
+        for i in 0..<x.rows {
+            result.grid[i] = asum(x[i])
+        }
+        return result
+    }
+}
+
+/**
+ Matrix absolute summation.
+ - parameter x: a Matrix
+ - parameter axies: .Column sums along columns, .Row sums along rows.
+ - returns: the absolute sum of columns, resp. rows as a column matrix,
+ resp. a row matrix (element-wise, newly allocated)
+ */
+public func asum(x: Matrix<Float>, axies: MatrixAxies = .Column) -> Matrix<Float> {
+    
+    switch axies {
+    case .Column:
+        var result = Matrix<Float>(rows: 1, columns: x.columns, repeatedValue: 0.0)
+        for i in 0..<x.columns {
+            result.grid[i] = asum(x[column: i])
+        }
+        return result
+        
+    case .Row:
+        var result = Matrix<Float>(rows: x.rows, columns: 1, repeatedValue: 0.0)
+        for i in 0..<x.rows {
+            result.grid[i] = asum(x[i])
+        }
+        return result
+    }
+}
+
+/**
  Matrix inversion (NOT element-wise).
  - parameter x: a Matrix
  - returns: 1/x (NOT element-wise, newly allocated)
