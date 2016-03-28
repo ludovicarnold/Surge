@@ -36,8 +36,8 @@ public enum MatrixAxies {
 public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
     public typealias Element = T
 
-    let rows: Int
-    let columns: Int
+    public let rows: Int
+    public let columns: Int
     var grid: [Element]
     
     /**
@@ -178,7 +178,7 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
             for (i, row) in rowRange.enumerate() {
                 let elements: [Element] = self[row]
                 for (j, column) in columnRange.enumerate() {
-                    result[i, j] = elements[j]
+                    result[i, j] = elements[column]
                 }
             }
             return result
@@ -247,7 +247,7 @@ extension Matrix: SequenceType {
         let endIndex = rows * columns
         var nextRowStartIndex = 0
 
-        return anyGenerator {
+        return AnyGenerator {
             if nextRowStartIndex == endIndex {
                 return nil
             }

@@ -40,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		823862DC1CA9BE2B00396A20 /* ZipZap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipZap.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/recophono-cbjaejziobaasqcrwtdgikyavsnf/Build/Products/Debug-iphoneos/ZipZap.framework"; sourceTree = "<group>"; };
+		823862DE1CA9BE6B00396A20 /* libZipZap.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libZipZap.a; path = "../../../ZipZap/build/Debug-iphoneos/libZipZap.a"; sourceTree = "<group>"; };
 		B897D7421C70507F00989C26 /* MatrixTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixTests.swift; sourceTree = "<group>"; };
 		B897D7441C7053AF00989C26 /* PowerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PowerTests.swift; sourceTree = "<group>"; };
 		D26964EC1C646AD800F456D4 /* Convolution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Convolution.swift; sourceTree = "<group>"; };
@@ -171,6 +173,8 @@
 		F8A1E1D419917C17009735E2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				823862DE1CA9BE6B00396A20 /* libZipZap.a */,
+				823862DC1CA9BE2B00396A20 /* ZipZap.framework */,
 				F8A1E1D619917C2B009735E2 /* Foundation.framework */,
 				F8A1E1D219917C0B009735E2 /* Accelerate.framework */,
 			);
@@ -288,7 +292,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8BD5C5C1A6C1C6500DD357E /* HyperbolicTests.swift in Sources */,
-				F8BD5C5A1A6C1C6500DD357E /* AuxiliaryTests.swift in Sources */,
 				B897D7451C7053AF00989C26 /* PowerTests.swift in Sources */,
 				F8BD5C5D1A6C1C6500DD357E /* TrigonometricTests.swift in Sources */,
 				F8BD5C5E1A6C1C6500DD357E /* XCTestCase+Surge.swift in Sources */,
