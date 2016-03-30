@@ -23,6 +23,7 @@
 
 import Accelerate
 
+
 public enum MatrixAxies {
     case Row
     case Column
@@ -38,7 +39,21 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
 
     public let rows: Int
     public let columns: Int
+    public let size: Int
     var grid: [Element]
+    
+    /**
+     Create a new matrix initialized with the given contents (no copy).
+     - parameter rows: the number of rows
+     - parameter columns: the number of columns
+     - parameter grid: the matrix contents.
+     */
+    public init(rows: Int, columns: Int, grid: [Element]) {
+        self.rows = rows
+        self.columns = columns
+        self.size = rows * columns
+        self.grid = grid
+    }
     
     /**
      Create a new matrix filled with repeatedValue.
@@ -47,10 +62,8 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
      - parameter repeatedValue: the initial value for all matrix elements.
     */
     public init(rows: Int, columns: Int, repeatedValue: Element) {
-        self.rows = rows
-        self.columns = columns
-
-        self.grid = [Element](count: rows * columns, repeatedValue: repeatedValue)
+        let grid = [Element](count: rows * columns, repeatedValue: repeatedValue)
+        self.init(rows: rows, columns: columns, grid: grid)
     }
     
     /**
@@ -70,6 +83,25 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
     }
     
     /**
+     - returns: This matrix as a contiguous array (no copy).
+    */
+    public func ravel() -> [Element] {
+        return self.grid
+    }
+    
+    /**
+     Reshaped view of this Matrix (no copy).
+     - parameter rows: new number of rows.
+     - parameter columns: new number of columns.
+     - returns: a Matrix(rows, columns) with the same contents as self.
+    */
+    public func reshape(rows: Int, _ columns: Int) -> Matrix<Element> {
+        precondition( size == rows * columns, "cannot reshape Matrix(\(self.rows),\(self.columns)) to shape(\(rows),\(columns))")
+        return Matrix<T>(rows: rows, columns: columns, grid: self.grid)
+    }
+    
+    
+    /**
      Get or set a single element.
      - parameter row: the element's row
      - parameter column: the element's column
@@ -87,7 +119,7 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
     }
     
     /**
-     Get or set a row (copy).
+     Get or set a row (no copy).
      - parameter row: the row index.
     */
     public subscript(row: Int) -> [Element] {
@@ -108,98 +140,31 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
     }
     
     /**
-     Get of set a column (copy).
+     Get of set a column (/!\ copy).
      - parameter column: the column index.
     */
     public subscript(column column: Int) -> [Element] {
         get {
-            var result = [Element](count: rows, repeatedValue: 0.0)
-            for i in 0..<rows {
-                let index = i * columns + column
-                result[i] = self.grid[index]
-            }
-            return result
+            assert(column < columns)
+            return (column.stride(to: size, by: columns)).map({ self.grid[$0] })
         }
         
         set {
             assert(column < columns)
             assert(newValue.count == rows)
-            for i in 0..<rows {
-                let index = i * columns + column
-                grid[index] = newValue[i]
-            }
+            newValue.enumerate().forEach({ self.grid[$0 * columns + column] = $1 })
         }
     }
     
     /**
-     Get or set selected rows.
-     - parameter rowRange: the range for rows.
-     - returns: a Matrix with only the selected rows.
-     */
-    public subscript(rows rowRange: Range<Int>) -> Matrix<T> {
-        get {
-            assert( rowRange.startIndex >= 0 )
-            assert( rowRange.endIndex <= rows )
-            assert( rowRange.startIndex < rowRange.endIndex )
-            var result = Matrix<T>(rows: rowRange.count, columns: columns, repeatedValue: 0.0)
-            for (i, row) in rowRange.enumerate() {
-                result[i] = self[row]
-            }
-            return result
+     Get the matrix as a 2D Array (no copy ?).
+    */
+    public func asArray() -> [[Element]] {
+        var result = [[Element]]()
+        for i in 0..<rows {
+            result.append(self[i])
         }
-        
-        set {
-            assert( rowRange.startIndex >= 0 )
-            assert( rowRange.endIndex <= rows )
-            assert( rowRange.startIndex < rowRange.endIndex )
-            assert( newValue.rows == rowRange.count )
-            assert( newValue.columns == columns )
-            for (i, row) in rowRange.enumerate() {
-                self[row] = newValue[i]
-            }
-        }
-    }
-    
-    /**
-     Get or set a submatrix.
-     - parameter rowRange: the range for rows.
-     - parameter columnRange: the range for columns.
-     - return: a Matrix with only the selected rows and columns.
-     */
-    public subscript(rows rowRange: Range<Int>, cols columnRange: Range<Int>) -> Matrix<T> {
-        get {
-            assert( rowRange.startIndex >= 0 )
-            assert( rowRange.endIndex <= rows )
-            assert( rowRange.startIndex < rowRange.endIndex )
-            assert( columnRange.startIndex >= 0 )
-            assert( columnRange.endIndex <= columns )
-            assert( columnRange.startIndex < columnRange.endIndex )
-            var result = Matrix<T>(rows: rowRange.count, columns: columnRange.count, repeatedValue: 0.0)
-            for (i, row) in rowRange.enumerate() {
-                let elements: [Element] = self[row]
-                for (j, column) in columnRange.enumerate() {
-                    result[i, j] = elements[column]
-                }
-            }
-            return result
-        }
-        
-        set {
-            assert( rowRange.startIndex >= 0 )
-            assert( rowRange.endIndex <= rows )
-            assert( rowRange.startIndex < rowRange.endIndex )
-            assert( columnRange.startIndex >= 0 )
-            assert( columnRange.endIndex <= columns )
-            assert( columnRange.startIndex < columnRange.endIndex )
-            assert( newValue.rows == rowRange.count )
-            assert( newValue.columns == columnRange.count)
-            for (i, row) in rowRange.enumerate() {
-                let elements: [Element] = newValue[i]
-                for (j, column) in columnRange.enumerate() {
-                    self[row, column] = elements[j]
-                }
-            }
-        }
+        return result
     }
     
     /**
@@ -211,6 +176,7 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
     private func indexIsValidForRow(row: Int, column: Int) -> Bool {
         return row >= 0 && row < rows && column >= 0 && column < columns
     }
+    
 }
 
 // MARK: - Printable
@@ -305,7 +271,7 @@ public func add(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
  - returns: x - y  (element-wise, newly allocated)
  */
 public func sub(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
-    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with addition")
+    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with subtraction")
     
     var results = x
     cblas_saxpy(Int32(y.grid.count), -1.0, y.grid, 1, &(results.grid), 1)
@@ -320,7 +286,7 @@ public func sub(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
  - returns: x - y  (element-wise, newly allocated)
  */
 public func sub(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
-    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with addition")
+    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with subtraction")
     
     var results = x
     cblas_daxpy(Int32(y.grid.count), -1.0, y.grid, 1, &(results.grid), 1)
