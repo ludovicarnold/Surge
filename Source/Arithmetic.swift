@@ -27,7 +27,7 @@ import Accelerate
 /**
  Sum elements of an Array.
  - parameter x: the array to sum over.
- - returns: x[0] + ... + x[x.count-1]
+ - returns: ∑(i=0..count-1) x[i]
  */
 public func sum(x: [Float]) -> Float {
     var result: Float = 0.0
@@ -39,7 +39,7 @@ public func sum(x: [Float]) -> Float {
 /**
  Sum elements of an Array.
  - parameter x: the array to sum over.
- - returns: x[0] + ... + x[x.count-1]
+ - returns: ∑(i=0..count-1) x[i]
  */
 public func sum(x: [Double]) -> Double {
     var result: Double = 0.0
@@ -53,7 +53,7 @@ public func sum(x: [Double]) -> Double {
 /**
  Sum the absolute values of an Array.
  - parameter x: the array to sum over.
- - returns: abs(|x[0]) + ... + abs(x[x.count-1])
+ - returns: ∑(i=0..count-1) |x[i]|
 */
 public func asum(x: [Float]) -> Float {
     return cblas_sasum(Int32(x.count), x, 1)
@@ -62,7 +62,7 @@ public func asum(x: [Float]) -> Float {
 /**
  Sum the absolute values of an Array.
  - parameter x: the array to sum over.
- - returns: abs(|x[0]) + ... + abs(x[x.count-1])
+ - returns: ∑(i=0..count-1) |x[i]|
  */
 public func asum(x: [Double]) -> Double {
     return cblas_dasum(Int32(x.count), x, 1)
@@ -73,7 +73,7 @@ public func asum(x: [Double]) -> Double {
 /**
  The maximum value of an array.
  - parameter x: the input array.
- - returns: m such that exists i, x[i] == m and forall i, x[i] <= m.
+ - returns: M | ∃i, x[i] = M, ∀i, x[i] ≤ M.
  */
 public func max(x: [Float]) -> Float {
     var result: Float = 0.0
@@ -85,7 +85,7 @@ public func max(x: [Float]) -> Float {
 /**
  The maximum value of an array.
  - parameter x: the input array.
- - returns: m such that exists i, x[i] == m and forall i, x[i] <= m.
+ - returns: M | ∃i, x[i] = M, ∀i, x[i] ≤ M.
  */
 public func max(x: [Double]) -> Double {
     var result: Double = 0.0
@@ -99,7 +99,7 @@ public func max(x: [Double]) -> Double {
 /**
  The minimum value of an array.
  - parameter x: the input array.
- - returns: m such that exists i, x[i] == m and forall i, x[i] >= m
+ - returns: m | ∃i, x[i] = m, ∀i, x[i] ≥ m.
  */
 public func min(x: [Float]) -> Float {
     var result: Float = 0.0
@@ -111,7 +111,7 @@ public func min(x: [Float]) -> Float {
 /**
  The minimum value of an array.
  - parameter x: the input array.
- - returns: m such that exists i, x[i] == m and forall i, x[i] >= m
+ - returns: m | ∃i, x[i] = m, ∀i, x[i] ≥ m.
  */
 public func min(x: [Double]) -> Double {
     var result: Double = 0.0
@@ -125,7 +125,7 @@ public func min(x: [Double]) -> Double {
 /**
  The mean value of an array.
  - parameter x: the input array.
- - returns: (x[0] + ... + x[x.count-1]) / x.count
+ - returns: (1/count) ∑(i=0..count-1) x[i]
  */
 public func mean(x: [Float]) -> Float {
     var result: Float = 0.0
@@ -137,7 +137,7 @@ public func mean(x: [Float]) -> Float {
 /**
  The mean value of an array.
  - parameter x: the input array.
- - returns: (x[0] + ... + x[x.count-1]) / x.count
+ - returns: (1/count) ∑(i=0..count-1) x[i]
  */
 public func mean(x: [Double]) -> Double {
     var result: Double = 0.0
@@ -151,7 +151,7 @@ public func mean(x: [Double]) -> Double {
 /**
  The mean magnitude of an array.
  - parameter x: the input array.
- - returns: ( abs(x[0]) + ... + abs(x[x.count-1]) ) / x.count
+ - returns: (1/count) ∑(i=0..count-1) |x[i]|
  */
 public func meamg(x: [Float]) -> Float {
     var result: Float = 0.0
@@ -163,7 +163,7 @@ public func meamg(x: [Float]) -> Float {
 /**
  The mean magnitude of an array.
  - parameter x: the input array.
- - returns: ( abs(x[0]) + ... + abs(x[x.count-1]) ) / x.count
+ - returns: (1/count) ∑(i=0..count-1) |x[i]|
  */
 public func meamg(x: [Double]) -> Double {
     var result: Double = 0.0
@@ -177,7 +177,7 @@ public func meamg(x: [Double]) -> Double {
 /**
  The mean squared  value of an array.
  - parameter x: the input array.
- - returns: ( x[0]^2 + ... + x[x.count-1]^2 ) / x.count
+ - returns: (1/count) ∑(i=0..count-1) x[i]²
  */
 public func measq(x: [Float]) -> Float {
     var result: Float = 0.0
@@ -189,7 +189,7 @@ public func measq(x: [Float]) -> Float {
 /**
  The mean squared  value of an array.
  - parameter x: the input array.
- - returns: ( x[0]^2 + ... + x[x.count-1]^2 ) / x.count
+ - returns: (1/count) ∑(i=0..count-1) x[i]²
  */
 public func measq(x: [Double]) -> Double {
     var result: Double = 0.0
@@ -345,7 +345,7 @@ public func remainder(x: [Double], y: [Double]) -> [Double] {
 /**
  Element-wise square root.
  - parameter x: an Array
- - returns: newly allocated sqrt(x)
+ - returns: newly allocated √x
  */
 public func sqrt(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)
@@ -357,7 +357,7 @@ public func sqrt(x: [Float]) -> [Float] {
 /**
  Element-wise square root.
     - parameter x: an Array
-    - returns: newly allocated sqrt(x)
+    - returns: newly allocated √x
 */
 public func sqrt(x: [Double]) -> [Double] {
     var results = [Double](count: x.count, repeatedValue: 0.0)
@@ -373,7 +373,7 @@ public func sqrt(x: [Double]) -> [Double] {
  - parameter x: an Array
  - parameter y: an Array
  - precondition: x.count == y.count
- - returns: sum( x[0] * y[0] + ... + x[count-1] * y[count-1])
+ - returns: ∑(i=0..count-1) x[i].y[i]
 */
 public func dot(x: [Float], y: [Float]) -> Float {
     precondition(x.count == y.count, "Vectors must have equal count")
@@ -389,7 +389,7 @@ public func dot(x: [Float], y: [Float]) -> Float {
  - parameter x: an Array
  - parameter y: an Array
  - precondition: x.count == y.count
- - returns: sum( x[0] * y[0] + ... + x[count-1] * y[count-1])
+ - returns: ∑(i=0..count-1) x[i].y[i]
  */
 public func dot(x: [Double], y: [Double]) -> Double {
     precondition(x.count == y.count, "Vectors must have equal count")
@@ -407,7 +407,7 @@ public func dot(x: [Double], y: [Double]) -> Double {
  - parameter x: an Array
  - parameter y: an Array
  - precondition: x.count == y.count
- - returns: sum( (x[0]-y[0])^2 + ... + (x[count-1]-y[count-1])^2 )
+ - returns: ∑(i=0..count-1) (x[i]-y[i])²
  */
 public func dist(x: [Float], y: [Float]) -> Float {
     precondition(x.count == y.count, "Vectors must have equal count")
@@ -423,7 +423,7 @@ public func dist(x: [Float], y: [Float]) -> Float {
  - parameter x: an Array
  - parameter y: an Array
  - precondition: x.count == y.count
- - returns: sum( (x[0]-y[0])^2 + ... + (x[count-1]-y[count-1])^2 )
+ - returns: ∑(i=0..count-1) (x[i]-y[i])²
  */
 public func dist(x: [Double], y: [Double]) -> Double {
     precondition(x.count == y.count, "Vectors must have equal count")
