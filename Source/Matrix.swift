@@ -245,7 +245,7 @@ public func ==<T> (lhs: Matrix<T>, rhs: Matrix<T>) -> Bool {
 // MARK: -
 
 /**
- Matrix addition.
+ Matrix-Matrix addition.
  - parameter x: a Matrix
  - parameter y: a Matrix
  - returns: x + y  (element-wise, newly allocated)
@@ -260,7 +260,7 @@ public func add(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
 }
 
 /**
- Matrix addition.
+ Matrix-Matrix addition.
  - parameter x: a Matrix
  - parameter y: a Matrix
  - returns: x + y  (element-wise, newly allocated)
@@ -275,7 +275,7 @@ public func add(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
 }
 
 /**
- Matrix subtraction.
+ Matrix-Matrix subtraction.
  - parameter x: a Matrix
  - parameter y: a Matrix
  - returns: x - y  (element-wise, newly allocated)
@@ -290,7 +290,7 @@ public func sub(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
 }
 
 /**
- Matrix subtraction.
+ Matrix-Matrix subtraction.
  - parameter x: a Matrix
  - parameter y: a Matrix
  - returns: x - y  (element-wise, newly allocated)
@@ -305,7 +305,7 @@ public func sub(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
 }
 
 /**
- Matrix multiplication by a scalar.
+ Matrix scalar multiplication.
  - parameter alpha: a Float
  - parameter x: a Matrix
  - returns: x * alpha  (element-wise, newly allocated)
@@ -318,7 +318,7 @@ public func mul(alpha: Float, x: Matrix<Float>) -> Matrix<Float> {
 }
 
 /**
- Matrix multiplication by a scalar.
+ Matrix scalar multiplication.
  - parameter alpha: a Double
  - parameter x: a Matrix
  - returns: x * alpha  (element-wise, newly allocated)
@@ -336,7 +336,7 @@ public func mul(alpha: Double, x: Matrix<Double>) -> Matrix<Double> {
  - parameter y: a Matrix
  - returns: x * y  (NOT element-wise, newly allocated)
  */
-public func mul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
+public func mmul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
     precondition(x.columns == y.rows, "Matrix dimensions not compatible with multiplication")
 
     var results = Matrix<Float>(rows: x.rows, columns: y.columns, repeatedValue: 0.0)
@@ -351,7 +351,7 @@ public func mul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
  - parameter y: a Matrix
  - returns: x * y  (NOT element-wise, newly allocated)
  */
-public func mul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
+public func mmul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
     precondition(x.columns == y.rows, "Matrix dimensions not compatible with multiplication")
 
     var results = Matrix<Double>(rows: x.rows, columns: y.columns, repeatedValue: 0.0)
@@ -366,7 +366,7 @@ public func mul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
  - parameter y: a Matrix
  - returns: x * y  (element-wise, newly allocated)
  */
-public func elmul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
+public func mul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
     precondition(x.rows == y.rows && x.columns == y.columns, "Matrix must have the same dimensions")
     var result = Matrix<Double>(rows: x.rows, columns: x.columns, repeatedValue: 0.0)
     result.grid = x.grid * y.grid
@@ -379,7 +379,7 @@ public func elmul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
  - parameter y: a Matrix
  - returns: x * y  (element-wise, newly allocated)
  */
-public func elmul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
+public func mul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
     precondition(x.rows == y.rows && x.columns == y.columns, "Matrix must have the same dimensions")
     var result = Matrix<Float>(rows: x.rows, columns: x.columns, repeatedValue: 0.0)
     result.grid = x.grid * y.grid
@@ -636,52 +636,105 @@ public func transpose(x: Matrix<Double>) -> Matrix<Double> {
 
 // MARK: - Operators
 
+/**
+ Matrix-Matrix addition.
+*/
 public func + (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
     return add(lhs, y: rhs)
 }
 
+/**
+ Matrix-Matrix addition.
+ */
 public func + (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
     return add(lhs, y: rhs)
 }
 
+/**
+ Matrix-Matrix subtraction
+ */
 public func - (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
     return sub(lhs, y: rhs)
 }
 
+/**
+ Matrix-Matrix subtraction
+ */
 public func - (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
     return sub(lhs, y: rhs)
 }
 
+/**
+ Matrix left scalar multiplication
+*/
 public func * (lhs: Float, rhs: Matrix<Float>) -> Matrix<Float> {
     return mul(lhs, x: rhs)
 }
 
+/**
+ Matrix right scalar multiplication
+*/
+public func * (lhs: Matrix<Float>, rhs: Float) -> Matrix<Float> {
+    return mul(rhs, x: lhs)
+}
+
+/**
+ Matrix left scalar multiplication
+*/
 public func * (lhs: Double, rhs: Matrix<Double>) -> Matrix<Double> {
     return mul(lhs, x: rhs)
 }
 
-public func * (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
-    return mul(lhs, y: rhs)
+/**
+ Matrix right scalar multiplication
+*/
+public func * (lhs: Matrix<Double>, rhs: Double) -> Matrix<Double> {
+    return mul(rhs, x: lhs)
 }
 
-public func * (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
-    return mul(lhs, y: rhs)
+infix operator × {associativity left precedence 150} // multiplicative precedence
+/**
+ Matrix-Matrix multiplication
+*/
+public func × (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
+    return mmul(lhs, y: rhs)
 }
 
-public func / (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
+
+/**
+ Matrix-Matrix multiplication
+*/
+public func × (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
+    return mmul(lhs, y: rhs)
+}
+
+infix operator ÷ {associativity left precedence 150} // multiplicative precedence
+/**
+ matrix-matrix division
+ */
+public func ÷ (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
     return div(lhs, y: rhs)
 }
 
-public func / (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
+/**
+ matrix-matrix division
+ */
+public func ÷ (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
     return div(lhs, y: rhs)
 }
 
+/**
+ matrix right scalar division
+ */
 public func / (lhs: Matrix<Double>, rhs: Double) -> Matrix<Double> {
     var result = Matrix<Double>(rows: lhs.rows, columns: lhs.columns, repeatedValue: 0.0)
     result.grid = lhs.grid / rhs;
     return result;
 }
 
+/**
+ matrix right scalar division
+ */
 public func / (lhs: Matrix<Float>, rhs: Float) -> Matrix<Float> {
     var result = Matrix<Float>(rows: lhs.rows, columns: lhs.columns, repeatedValue: 0.0)
     result.grid = lhs.grid / rhs;
@@ -689,10 +742,16 @@ public func / (lhs: Matrix<Float>, rhs: Float) -> Matrix<Float> {
 }
 
 postfix operator ′ {}
+/**
+ Matrix transposition
+*/
 public postfix func ′ (value: Matrix<Float>) -> Matrix<Float> {
     return transpose(value)
 }
 
+/**
+ Matrix transposition
+*/
 public postfix func ′ (value: Matrix<Double>) -> Matrix<Double> {
     return transpose(value)
 }
