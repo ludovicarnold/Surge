@@ -1,7 +1,7 @@
 // Hyperbolic.swift
 //
 // Copyright (c) 2014–2015 Mattt Thompson (http://mattt.me)
-//                    2016 Ludovic Arnold (http://ludovicarnold.com)
+//      Modifications 2016 Ludovic Arnold (http://ludovicarnold.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,16 @@ public enum MatrixAxies {
 
 /**
  A Surge Matrix with elements of type T.
+ 
+ Remark: (deferred copy) Methods documented with 'deferred copy' will only incur
+ the cost of a copy if the concerned Array is mutated.  Array is a struct  (wich
+ means  it  has copy semantics)  but a copy  is only  performed  if an  array is
+ changed.  This behaviour  is indicated  with the words 'deferred copy'  in each
+ method's documentation. If a  method returns an array with  'deferred copy', it
+ can be safely modified, but it will only  incur  the cost of a copy if and when
+ the concerned  array is mutated.  By contrast, methods  documented  with 'copy'
+ will immediatly incur the cost of a copy.
+ 
  - parameter T: the type of the matrix elements (e.g. Float or Double).
  - note: the matrix is in row major (a.k.a. C) order.
 */
@@ -43,7 +53,7 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
     var grid: [Element]
     
     /**
-     Create a new matrix initialized with the given contents (no copy).
+     Create a new matrix initialized with the given contents (deferred copy).
      - parameter rows: the number of rows
      - parameter columns: the number of columns
      - parameter grid: the matrix contents.
@@ -83,14 +93,14 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
     }
     
     /**
-     - returns: This matrix as a contiguous array (no copy).
+     - returns: This matrix as a 1d array (deferred copy).
     */
     public func ravel() -> [Element] {
         return self.grid
     }
     
     /**
-     Reshaped view of this Matrix (no copy).
+     Reshaped view of this Matrix (deferred copy).
      - parameter rows: new number of rows.
      - parameter columns: new number of columns.
      - returns: a Matrix(rows, columns) with the same contents as self.
@@ -119,7 +129,7 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
     }
     
     /**
-     Get or set a row (no copy).
+     Get (deferred copy) or set (copy) a row .
      - parameter row: the row index.
     */
     public subscript(row: Int) -> [Element] {
@@ -140,7 +150,7 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
     }
     
     /**
-     Get of set a column (/!\ copy).
+     Get (copy) or set (copy) a column.
      - parameter column: the column index.
     */
     public subscript(column column: Int) -> [Element] {
@@ -157,7 +167,7 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
     }
     
     /**
-     Get the matrix as a 2D Array (no copy ?).
+     Get the matrix as a 2D Array (deferred copy).
     */
     public func asArray() -> [[Element]] {
         var result = [[Element]]()
