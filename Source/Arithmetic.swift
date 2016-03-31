@@ -204,9 +204,11 @@ public func measq(x: [Double]) -> Double {
  Element-wise array addition.
  - parameter x: an Array
  - parameter y: an Array
+ - precondition: x.count == y.count
  - returns: newly allocated x + y
  */
 public func add(x: [Float], y: [Float]) -> [Float] {
+    precondition(x.count == y.count, "Vectors must have equal count")
     var results = [Float](y)
     cblas_saxpy(Int32(x.count), 1.0, x, 1, &results, 1)
 
@@ -217,9 +219,11 @@ public func add(x: [Float], y: [Float]) -> [Float] {
  Element-wise array addition.
  - parameter x: an Array
  - parameter y: an Array
+ - precondition: x.count == y.count
  - returns: newly allocated x + y
  */
 public func add(x: [Double], y: [Double]) -> [Double] {
+    precondition(x.count == y.count, "Vectors must have equal count")
     var results = [Double](y)
     cblas_daxpy(Int32(x.count), 1.0, x, 1, &results, 1)
 
@@ -232,9 +236,11 @@ public func add(x: [Double], y: [Double]) -> [Double] {
  Element-wise array subtraction.
  - parameter x: an Array
  - parameter y: an Array
+ - precondition: x.count == y.count
  - returns: newly allocated x - y
  */
 public func sub(x: [Float], y: [Float]) -> [Float] {
+    precondition(x.count == y.count, "Vectors must have equal count")
     var results = [Float](y)
     catlas_saxpby(Int32(x.count), 1.0, x, 1, -1, &results, 1)
     
@@ -245,9 +251,11 @@ public func sub(x: [Float], y: [Float]) -> [Float] {
  Element-wise array subtraction.
  - parameter x: an Array
  - parameter y: an Array
+ - precondition: x.count == y.count
  - returns: newly allocated x - y
  */
 public func sub(x: [Double], y: [Double]) -> [Double] {
+    precondition(x.count == y.count, "Vectors must have equal count")
     var results = [Double](y)
     catlas_daxpby(Int32(x.count), 1.0, x, 1, -1, &results, 1)
     
@@ -260,9 +268,11 @@ public func sub(x: [Double], y: [Double]) -> [Double] {
  Element-wise array multiplication.
  - parameter x: an Array
  - parameter y: an Array
+ - precondition: x.count == y.count
  - returns: newly allocated x * y
  */
 public func mul(x: [Float], y: [Float]) -> [Float] {
+    precondition(x.count == y.count, "Vectors must have equal count")
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vDSP_vmul(x, 1, y, 1, &results, 1, vDSP_Length(x.count))
 
@@ -273,9 +283,11 @@ public func mul(x: [Float], y: [Float]) -> [Float] {
  Element-wise array multiplication.
  - parameter x: an Array
  - parameter y: an Array
+ - precondition: x.count == y.count
  - returns: newly allocated x * y
  */
 public func mul(x: [Double], y: [Double]) -> [Double] {
+    precondition(x.count == y.count, "Vectors must have equal count")
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vDSP_vmulD(x, 1, y, 1, &results, 1, vDSP_Length(x.count))
 
@@ -288,9 +300,11 @@ public func mul(x: [Double], y: [Double]) -> [Double] {
  Element-wise array division.
  - parameter x: an Array
  - parameter y: an Array
+ - precondition: x.count == y.count
  - returns: newly allocated x / y
  */
 public func div(x: [Float], y: [Float]) -> [Float] {
+    precondition(x.count == y.count, "Vectors must have equal count")
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvdivf(&results, x, y, [Int32(x.count)])
 
@@ -301,9 +315,11 @@ public func div(x: [Float], y: [Float]) -> [Float] {
  Element-wise array division.
  - parameter x: an Array
  - parameter y: an Array
+ - precondition: x.count == y.count
  - returns: newly allocated x / y
  */
 public func div(x: [Double], y: [Double]) -> [Double] {
+    precondition(x.count == y.count, "Vectors must have equal count")
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvdiv(&results, x, y, [Int32(x.count)])
 
@@ -311,6 +327,7 @@ public func div(x: [Double], y: [Double]) -> [Double] {
 }
 
 public func mod(x: [Float], y: [Float]) -> [Float] {
+    precondition(x.count == y.count, "Vectors must have equal count")
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvfmodf(&results, x, y, [Int32(x.count)])
 
@@ -318,6 +335,7 @@ public func mod(x: [Float], y: [Float]) -> [Float] {
 }
 
 public func mod(x: [Double], y: [Double]) -> [Double] {
+    precondition(x.count == y.count, "Vectors must have equal count")
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvfmod(&results, x, y, [Int32(x.count)])
 
@@ -327,6 +345,7 @@ public func mod(x: [Double], y: [Double]) -> [Double] {
 // MARK: Remainder
 
 public func remainder(x: [Float], y: [Float]) -> [Float] {
+    precondition(x.count == y.count, "Vectors must have equal count")
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvremainderf(&results, x, y, [Int32(x.count)])
 
@@ -334,6 +353,7 @@ public func remainder(x: [Float], y: [Float]) -> [Float] {
 }
 
 public func remainder(x: [Double], y: [Double]) -> [Double] {
+    precondition(x.count == y.count, "Vectors must have equal count")
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvremainder(&results, x, y, [Int32(x.count)])
 
