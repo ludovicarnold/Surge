@@ -250,7 +250,7 @@ public func ==<T> (lhs: Matrix<T>, rhs: Matrix<T>) -> Bool {
  - parameter y: a Matrix
  - returns: x + y  (element-wise, newly allocated)
  */
-public func add(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
+public func add(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
     precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with addition")
 
     var results = y
@@ -265,7 +265,7 @@ public func add(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
  - parameter y: a Matrix
  - returns: x + y  (element-wise, newly allocated)
  */
-public func add(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
+public func add(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
     precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with addition")
 
     var results = y
@@ -280,7 +280,7 @@ public func add(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
  - parameter y: a Matrix
  - returns: x - y  (element-wise, newly allocated)
  */
-public func sub(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
+public func sub(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
     precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with subtraction")
     
     var results = x
@@ -295,7 +295,7 @@ public func sub(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
  - parameter y: a Matrix
  - returns: x - y  (element-wise, newly allocated)
  */
-public func sub(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
+public func sub(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
     precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with subtraction")
     
     var results = x
@@ -310,7 +310,7 @@ public func sub(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
  - parameter x: a Matrix
  - returns: x * alpha  (element-wise, newly allocated)
  */
-public func mul(alpha: Float, x: Matrix<Float>) -> Matrix<Float> {
+public func mul(alpha: Float, _ x: Matrix<Float>) -> Matrix<Float> {
     var results = x
     cblas_sscal(Int32(x.grid.count), alpha, &(results.grid), 1)
 
@@ -323,7 +323,7 @@ public func mul(alpha: Float, x: Matrix<Float>) -> Matrix<Float> {
  - parameter x: a Matrix
  - returns: x * alpha  (element-wise, newly allocated)
  */
-public func mul(alpha: Double, x: Matrix<Double>) -> Matrix<Double> {
+public func mul(alpha: Double, _ x: Matrix<Double>) -> Matrix<Double> {
     var results = x
     cblas_dscal(Int32(x.grid.count), alpha, &(results.grid), 1)
 
@@ -336,7 +336,7 @@ public func mul(alpha: Double, x: Matrix<Double>) -> Matrix<Double> {
  - parameter y: a Matrix
  - returns: x * y  (NOT element-wise, newly allocated)
  */
-public func mmul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
+public func dot(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
     precondition(x.columns == y.rows, "Matrix dimensions not compatible with multiplication")
 
     var results = Matrix<Float>(rows: x.rows, columns: y.columns, repeatedValue: 0.0)
@@ -351,7 +351,7 @@ public func mmul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
  - parameter y: a Matrix
  - returns: x * y  (NOT element-wise, newly allocated)
  */
-public func mmul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
+public func dot(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
     precondition(x.columns == y.rows, "Matrix dimensions not compatible with multiplication")
 
     var results = Matrix<Double>(rows: x.rows, columns: y.columns, repeatedValue: 0.0)
@@ -361,12 +361,75 @@ public func mmul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
 }
 
 /**
+ Matrix-Vector multiplication (NOT element-wise).
+ - parameter x: a Matrix
+ - parameter y: an Array
+ - returns: x * y  (NOT element-wise, newly allocated)
+ */
+public func dot(x: Matrix<Float>, _ y: [Float]) -> [Float] {
+    precondition(x.columns == y.count, "Matrix or Vector dimensions not compatible with multiplication")
+    
+    var results = [Float](count: x.rows, repeatedValue: 0.0)
+    cblas_sgemv(CblasRowMajor, CblasNoTrans, Int32(x.rows), Int32(x.columns), 1.0, x.grid, Int32(x.columns), y, Int32(1), 0.0, &results, Int32(1))
+    
+    return results
+}
+
+/**
+ Vector-Matrix multiplication (NOT element-wise).
+ - parameter x: an Array
+ - parameter y: a Matrix
+ - returns: x * y  (NOT element-wise, newly allocated)
+ */
+public func dot(x: [Float], _ y: Matrix<Float>) -> [Float] {
+    precondition(y.rows == x.count, "Matrix or Vector dimensions not compatible with multiplication")
+    
+    var results = [Float](count: y.columns, repeatedValue: 0.0)
+    cblas_sgemv(CblasRowMajor, CblasTrans, Int32(y.rows), Int32(y.columns), 1.0, y.grid, Int32(y.columns), x, Int32(1), 0.0, &results, Int32(1))
+    
+    return results
+}
+
+/**
+ Matrix-Vector multiplication (NOT element-wise).
+ - parameter x: a Matrix
+ - parameter y: an Array
+ - returns: x * y  (NOT element-wise, newly allocated)
+ */
+public func dot(x: Matrix<Double>, _ y: [Double]) -> [Double] {
+    precondition(x.columns == y.count, "Matrix or Vector dimensions not compatible with multiplication")
+    
+    var results = [Double](count: x.rows, repeatedValue: 0.0)
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, Int32(x.rows), Int32(x.columns), // order, trans, m, n
+        1.0, x.grid, Int32(x.columns), // alpha, A, lda
+        y, Int32(1), // X, incX
+        0.0, &results, Int32(1)) // beta, Y, incY
+    
+    return results
+}
+
+/**
+ Vector-Matrix multiplication (NOT element-wise).
+ - parameter x: a Matrix
+ - parameter y: an Array
+ - returns: x * y  (NOT element-wise, newly allocated)
+ */
+public func dot(x: [Double], _ y: Matrix<Double>) -> [Double] {
+    precondition(y.rows == x.count, "Matrix or Vector dimensions not compatible with multiplication")
+    
+    var results = [Double](count: y.columns, repeatedValue: 0.0)
+    cblas_dgemv(CblasRowMajor, CblasTrans, Int32(y.rows), Int32(y.columns), 1.0, y.grid, Int32(y.columns), x, Int32(1), 0.0, &results, Int32(1))
+    
+    return results
+}
+
+/**
  Matrix-Matrix multiplication (element-wise).
  - parameter x: a Matrix
  - parameter y: a Matrix
  - returns: x * y  (element-wise, newly allocated)
  */
-public func mul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
+public func mul(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
     precondition(x.rows == y.rows && x.columns == y.columns, "Matrix must have the same dimensions")
     var result = Matrix<Double>(rows: x.rows, columns: x.columns, repeatedValue: 0.0)
     result.grid = x.grid * y.grid
@@ -379,7 +442,7 @@ public func mul(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
  - parameter y: a Matrix
  - returns: x * y  (element-wise, newly allocated)
  */
-public func mul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
+public func mul(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
     precondition(x.rows == y.rows && x.columns == y.columns, "Matrix must have the same dimensions")
     var result = Matrix<Float>(rows: x.rows, columns: x.columns, repeatedValue: 0.0)
     result.grid = x.grid * y.grid
@@ -392,10 +455,10 @@ public func mul(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
  - parameter y: a Matrix
  - returns: x * 1/y  (NOT element-wise, newly allocated)
  */
-public func div(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
+public func div(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
     let yInv = inv(y)
     precondition(x.columns == yInv.rows, "Matrix dimensions not compatible")
-    return mul(x, y: yInv)
+    return dot(x, yInv)
 }
 
 /**
@@ -404,10 +467,10 @@ public func div(x: Matrix<Double>, y: Matrix<Double>) -> Matrix<Double> {
  - parameter y: a Matrix
  - returns: x * 1/y  (NOT element-wise, newly allocated)
  */
-public func div(x: Matrix<Float>, y: Matrix<Float>) -> Matrix<Float> {
+public func div(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
     let yInv = inv(y)
     precondition(x.columns == yInv.rows, "Matrix dimensions not compatible")
-    return mul(x, y: yInv)
+    return dot(x, yInv)
 }
 
 /**
@@ -640,72 +703,99 @@ public func transpose(x: Matrix<Double>) -> Matrix<Double> {
  Matrix-Matrix addition.
 */
 public func + (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
-    return add(lhs, y: rhs)
+    return add(lhs, rhs)
 }
 
 /**
  Matrix-Matrix addition.
  */
 public func + (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
-    return add(lhs, y: rhs)
+    return add(lhs, rhs)
 }
 
 /**
  Matrix-Matrix subtraction
  */
 public func - (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
-    return sub(lhs, y: rhs)
+    return sub(lhs, rhs)
 }
 
 /**
  Matrix-Matrix subtraction
  */
 public func - (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
-    return sub(lhs, y: rhs)
+    return sub(lhs, rhs)
 }
 
 /**
  Matrix left scalar multiplication
 */
 public func * (lhs: Float, rhs: Matrix<Float>) -> Matrix<Float> {
-    return mul(lhs, x: rhs)
+    return mul(lhs, rhs)
 }
 
 /**
  Matrix right scalar multiplication
 */
 public func * (lhs: Matrix<Float>, rhs: Float) -> Matrix<Float> {
-    return mul(rhs, x: lhs)
+    return mul(rhs, lhs)
 }
 
 /**
  Matrix left scalar multiplication
 */
 public func * (lhs: Double, rhs: Matrix<Double>) -> Matrix<Double> {
-    return mul(lhs, x: rhs)
+    return mul(lhs, rhs)
 }
 
 /**
  Matrix right scalar multiplication
 */
 public func * (lhs: Matrix<Double>, rhs: Double) -> Matrix<Double> {
-    return mul(rhs, x: lhs)
-}
-
-infix operator × {associativity left precedence 150} // multiplicative precedence
-/**
- Matrix-Matrix multiplication
-*/
-public func × (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
-    return mmul(lhs, y: rhs)
+    return mul(rhs, lhs)
 }
 
 
 /**
  Matrix-Matrix multiplication
 */
-public func × (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
-    return mmul(lhs, y: rhs)
+public func • (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
+    return dot(lhs, rhs)
+}
+
+/**
+ Matrix-Vector multiplication
+ */
+public func • (lhs: Matrix<Float>, rhs: [Float]) -> [Float] {
+    return dot(lhs, rhs)
+}
+
+/**
+ Vector-Matrix multiplication
+ */
+public func • (lhs: [Float], rhs: Matrix<Float>) -> [Float] {
+    return dot(lhs, rhs)
+}
+
+/**
+ Matrix-Matrix multiplication
+*/
+public func • (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
+    return dot(lhs, rhs)
+}
+
+/**
+ Matrix-Vector multiplication
+ */
+public func • (lhs: Matrix<Double>, rhs: [Double]) -> [Double] {
+    return dot(lhs, rhs)
+}
+
+/**
+ Vector-Matrix multiplication
+ */
+public func • (lhs: [Double], rhs: Matrix<Double>) -> [Double] {
+    return dot(lhs, rhs)
 }
 
 infix operator ÷ {associativity left precedence 150} // multiplicative precedence
@@ -713,14 +803,14 @@ infix operator ÷ {associativity left precedence 150} // multiplicative preceden
  matrix-matrix division
  */
 public func ÷ (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
-    return div(lhs, y: rhs)
+    return div(lhs, rhs)
 }
 
 /**
  matrix-matrix division
  */
 public func ÷ (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
-    return div(lhs, y: rhs)
+    return div(lhs, rhs)
 }
 
 /**
