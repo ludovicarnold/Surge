@@ -94,6 +94,32 @@ public func max(x: [Double]) -> Double {
     return result
 }
 
+/**
+ The index of the maximum value of an array.
+ - parameter x: the input array.
+ - returns: k | ∀i, x[i] ≤ x[k].
+ */
+public func argmax(x: [Float]) -> Int {
+    var maxv: Float = 0.0
+    var maxvi: UInt = 0
+    vDSP_maxvi(x, 1, &maxv, &maxvi, vDSP_Length(x.count))
+    
+    return Int(maxvi)
+}
+
+/**
+ The index of the maximum value of an array.
+ - parameter x: the input array.
+ - returns: k | ∀i, x[i] ≤ x[k].
+ */
+public func argmax(x: [Double]) -> Int {
+    var maxv: Double = 0.0
+    var maxvi: UInt = 0
+    vDSP_maxviD(x, 1, &maxv, &maxvi, vDSP_Length(x.count))
+    
+    return Int(maxvi)
+}
+
 // MARK: Minimum
 
 /**
@@ -118,6 +144,32 @@ public func min(x: [Double]) -> Double {
     vDSP_minvD(x, 1, &result, vDSP_Length(x.count))
 
     return result
+}
+
+/**
+ The index of the minimum value of an array.
+ - parameter x: the input array.
+ - returns: k | ∀i, x[i] ≥ x[k].
+ */
+public func argmin(x: [Float]) -> Int {
+    var minv: Float = 0.0
+    var minvi: UInt = 0
+    vDSP_minvi(x, 1, &minv, &minvi, vDSP_Length(x.count))
+    
+    return Int(minvi)
+}
+
+/**
+ The index of the minimum value of an array.
+ - parameter x: the input array.
+ - returns: k | ∀i, x[i] ≥ x[k].
+ */
+public func argmin(x: [Double]) -> Int {
+    var minv: Double = 0.0
+    var minvi: UInt = 0
+    vDSP_minviD(x, 1, &minv, &minvi, vDSP_Length(x.count))
+    
+    return Int(minvi)
 }
 
 // MARK: Mean
@@ -457,6 +509,24 @@ public func dist(x: [Double], _ y: [Double]) -> Double {
 // MARK: - Operators
 
 /**
+ Array concatenation (default + operator behavior).
+*/
+public func concat(a: [Float], _ b: [Float]) -> [Float] {
+    let result =  a + b
+    assert(result.count == a.count + b.count)
+    return result
+}
+
+/**
+ Array concatenation (default + operator behavior).
+ */
+public func concat(a: [Double], _ b: [Double]) -> [Double] {
+    let result =  a + b
+    assert(result.count == a.count + b.count)
+    return result
+}
+
+/**
  Add lhs and rhs (element-wise).
  - parameter lhs: an Array.
  - parameter rhs: an Array.
@@ -653,4 +723,19 @@ public func • (lhs: [Double], rhs: [Double]) -> Double {
  */
 public func • (lhs: [Float], rhs: [Float]) -> Float {
     return dot(lhs, rhs)
+}
+
+prefix operator - {}
+/**
+ Unary minus.
+ */
+public prefix func - (value: [Float]) -> [Float] {
+    return [Float](count: value.count, repeatedValue: 0.0) - value
+}
+
+/**
+Unary minus.
+*/
+public prefix func - (value: [Double]) -> [Double] {
+    return [Double](count: value.count, repeatedValue: 0.0) - value
 }
