@@ -337,7 +337,7 @@ public func mul(alpha: Double, _ x: Matrix<Double>) -> Matrix<Double> {
  - returns: x * y  (NOT element-wise, newly allocated)
  */
 public func dot(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
-    precondition(x.columns == y.rows, "Matrix dimensions not compatible with multiplication")
+    precondition(x.columns == y.rows, "Matrix(\(x.rows),\(x.columns)) and Matrix(\(y.rows),\(y.columns))  not compatible with multiplication")
 
     var results = Matrix<Float>(rows: x.rows, columns: y.columns, repeatedValue: 0.0)
     cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, Int32(x.rows), Int32(y.columns), Int32(x.columns), 1.0, x.grid, Int32(x.columns), y.grid, Int32(y.columns), 0.0, &(results.grid), Int32(results.columns))
@@ -352,7 +352,7 @@ public func dot(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
  - returns: x * y  (NOT element-wise, newly allocated)
  */
 public func dot(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
-    precondition(x.columns == y.rows, "Matrix dimensions not compatible with multiplication")
+    precondition(x.columns == y.rows, "Matrix(\(x.rows),\(x.columns)) and Matrix(\(y.rows),\(y.columns)) not compatible with multiplication")
 
     var results = Matrix<Double>(rows: x.rows, columns: y.columns, repeatedValue: 0.0)
     cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, Int32(x.rows), Int32(y.columns), Int32(x.columns), 1.0, x.grid, Int32(x.columns), y.grid, Int32(y.columns), 0.0, &(results.grid), Int32(results.columns))
@@ -367,7 +367,7 @@ public func dot(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
  - returns: x * y  (NOT element-wise, newly allocated)
  */
 public func dot(x: Matrix<Float>, _ y: [Float]) -> [Float] {
-    precondition(x.columns == y.count, "Matrix or Vector dimensions not compatible with multiplication")
+    precondition(x.columns == y.count, "Matrix(\(x.rows),\(x.columns)) and Vector(\(y.count)) not compatible with multiplication")
     
     var results = [Float](count: x.rows, repeatedValue: 0.0)
     cblas_sgemv(CblasRowMajor, CblasNoTrans, Int32(x.rows), Int32(x.columns), 1.0, x.grid, Int32(x.columns), y, Int32(1), 0.0, &results, Int32(1))
@@ -382,7 +382,7 @@ public func dot(x: Matrix<Float>, _ y: [Float]) -> [Float] {
  - returns: x * y  (NOT element-wise, newly allocated)
  */
 public func dot(x: [Float], _ y: Matrix<Float>) -> [Float] {
-    precondition(y.rows == x.count, "Matrix or Vector dimensions not compatible with multiplication")
+    precondition(y.rows == x.count, "Vector(\(x.count)) and Matrix(\(y.rows),\(y.columns)) not compatible with multiplication")
     
     var results = [Float](count: y.columns, repeatedValue: 0.0)
     cblas_sgemv(CblasRowMajor, CblasTrans, Int32(y.rows), Int32(y.columns), 1.0, y.grid, Int32(y.columns), x, Int32(1), 0.0, &results, Int32(1))
@@ -397,7 +397,7 @@ public func dot(x: [Float], _ y: Matrix<Float>) -> [Float] {
  - returns: x * y  (NOT element-wise, newly allocated)
  */
 public func dot(x: Matrix<Double>, _ y: [Double]) -> [Double] {
-    precondition(x.columns == y.count, "Matrix or Vector dimensions not compatible with multiplication")
+    precondition(x.columns == y.count, "Matrix(\(x.rows),\(x.columns)) and Vector(\(y.count)) not compatible with multiplication")
     
     var results = [Double](count: x.rows, repeatedValue: 0.0)
     cblas_dgemv(CblasRowMajor, CblasNoTrans, Int32(x.rows), Int32(x.columns), // order, trans, m, n
@@ -415,7 +415,7 @@ public func dot(x: Matrix<Double>, _ y: [Double]) -> [Double] {
  - returns: x * y  (NOT element-wise, newly allocated)
  */
 public func dot(x: [Double], _ y: Matrix<Double>) -> [Double] {
-    precondition(y.rows == x.count, "Matrix or Vector dimensions not compatible with multiplication")
+    precondition(y.rows == x.count, "Vector(\(x.count)) and Matrix(\(y.rows),\(y.columns)) not compatible with multiplication")
     
     var results = [Double](count: y.columns, repeatedValue: 0.0)
     cblas_dgemv(CblasRowMajor, CblasTrans, Int32(y.rows), Int32(y.columns), 1.0, y.grid, Int32(y.columns), x, Int32(1), 0.0, &results, Int32(1))
