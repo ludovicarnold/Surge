@@ -251,7 +251,7 @@ public func ==<T> (lhs: Matrix<T>, rhs: Matrix<T>) -> Bool {
  - returns: x + y  (element-wise, newly allocated)
  */
 public func add(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
-    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with addition")
+    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix(\(x.rows),\(x.columns)) and Matrix(\(y.rows),\(y.columns)) not compatible with element-wise addition")
 
     var results = y
     cblas_saxpy(Int32(x.grid.count), 1.0, x.grid, 1, &(results.grid), 1)
@@ -266,7 +266,7 @@ public func add(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
  - returns: x + y  (element-wise, newly allocated)
  */
 public func add(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
-    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with addition")
+    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix(\(x.rows),\(x.columns)) and Matrix(\(y.rows),\(y.columns)) not compatible with element-wise addition")
 
     var results = y
     cblas_daxpy(Int32(x.grid.count), 1.0, x.grid, 1, &(results.grid), 1)
@@ -281,7 +281,7 @@ public func add(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
  - returns: x - y  (element-wise, newly allocated)
  */
 public func sub(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
-    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with subtraction")
+    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix(\(x.rows),\(x.columns)) and Matrix(\(y.rows),\(y.columns)) not compatible with element-wise subtraction")
     
     var results = x
     cblas_saxpy(Int32(y.grid.count), -1.0, y.grid, 1, &(results.grid), 1)
@@ -296,7 +296,7 @@ public func sub(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
  - returns: x - y  (element-wise, newly allocated)
  */
 public func sub(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
-    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix dimensions not compatible with subtraction")
+    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix(\(x.rows),\(x.columns)) and Matrix(\(y.rows),\(y.columns)) not compatible with element-wise subtraction")
     
     var results = x
     cblas_daxpy(Int32(y.grid.count), -1.0, y.grid, 1, &(results.grid), 1)
@@ -430,7 +430,7 @@ public func dot(x: [Double], _ y: Matrix<Double>) -> [Double] {
  - returns: x * y  (element-wise, newly allocated)
  */
 public func mul(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
-    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix must have the same dimensions")
+    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix(\(x.rows),\(x.columns)) and Matrix(\(y.rows),\(y.columns)) not compatible with element-wise multiplication")
     var result = Matrix<Double>(rows: x.rows, columns: x.columns, repeatedValue: 0.0)
     result.grid = x.grid * y.grid
     return result
@@ -443,7 +443,7 @@ public func mul(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
  - returns: x * y  (element-wise, newly allocated)
  */
 public func mul(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
-    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix must have the same dimensions")
+    precondition(x.rows == y.rows && x.columns == y.columns, "Matrix(\(x.rows),\(x.columns)) and Matrix(\(y.rows),\(y.columns)) not compatible with element-wise multiplication")
     var result = Matrix<Float>(rows: x.rows, columns: x.columns, repeatedValue: 0.0)
     result.grid = x.grid * y.grid
     return result
@@ -457,7 +457,7 @@ public func mul(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
  */
 public func div(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
     let yInv = inv(y)
-    precondition(x.columns == yInv.rows, "Matrix dimensions not compatible")
+    precondition(x.columns == yInv.rows, "Matrix(\(x.rows),\(x.columns)) and Matrix(\(y.rows),\(y.columns)) not compatible with division")
     return dot(x, yInv)
 }
 
@@ -469,7 +469,7 @@ public func div(x: Matrix<Double>, _ y: Matrix<Double>) -> Matrix<Double> {
  */
 public func div(x: Matrix<Float>, _ y: Matrix<Float>) -> Matrix<Float> {
     let yInv = inv(y)
-    precondition(x.columns == yInv.rows, "Matrix dimensions not compatible")
+    precondition(x.columns == yInv.rows, "Matrix(\(x.rows),\(x.columns)) and Matrix(\(y.rows),\(y.columns)) not compatible with division")
     return dot(x, yInv)
 }
 
@@ -522,104 +522,96 @@ public func exp(x: Matrix<Float>) -> Matrix<Float> {
 /**
  Matrix summation.
  - parameter x: a Matrix
- - parameter axies: .Column sums along columns, .Row sums along rows.
- - returns: the sum of columns, resp. rows as a column matrix,
-   resp. a row matrix (element-wise, newly allocated)
+ - returns: ∑(i=0..rows-1)∑(j=0..columns-1) x[i, j]
  */
-public func sum(x: Matrix<Double>, axies: MatrixAxies = .Column) -> Matrix<Double> {
-    
+public func sum(x: Matrix<Double>) -> Double {
+    return sum(x.grid)
+}
+
+/**
+ Matrix summation.
+ - parameter x: a Matrix
+ - parameter axies: .Column sums columns, .Row sums rows.
+ - returns: the sum of columns, resp. rows
+ */
+public func sum(x: Matrix<Double>, axies: MatrixAxies) -> [Double] {
     switch axies {
     case .Column:
-        var result = Matrix<Double>(rows: 1, columns: x.columns, repeatedValue: 0.0)
-        for i in 0..<x.columns {
-            result.grid[i] = sum(x[column: i])
-        }
-        return result
-        
+        return (0..<x.columns).map({ sum(x[column: $0]) })
     case .Row:
-        var result = Matrix<Double>(rows: x.rows, columns: 1, repeatedValue: 0.0)
-        for i in 0..<x.rows {
-            result.grid[i] = sum(x[i])
-        }
-        return result
+        return (0..<x.rows).map({ sum(x[$0]) })
     }
 }
 
 /**
  Matrix summation.
  - parameter x: a Matrix
- - parameter axies: .Column sums along columns, .Row sums along rows.
- - returns: the sum of columns, resp. rows as a column matrix,
- resp. a row matrix (element-wise, newly allocated)
+ - returns: ∑(i=0..rows-1)∑(j=0..columns-1) x[i, j]
  */
-public func sum(x: Matrix<Float>, axies: MatrixAxies = .Column) -> Matrix<Float> {
-    
+public func sum(x: Matrix<Float>) -> Float {
+    return sum(x.grid)
+}
+
+/**
+ Matrix summation.
+ - parameter x: a Matrix
+ - parameter axies: .Column sums columns, .Row sums rows.
+ - returns: the sum of columns, resp. rows
+ */
+public func sum(x: Matrix<Float>, axies: MatrixAxies) -> [Float] {
     switch axies {
     case .Column:
-        var result = Matrix<Float>(rows: 1, columns: x.columns, repeatedValue: 0.0)
-        for i in 0..<x.columns {
-            result.grid[i] = sum(x[column: i])
-        }
-        return result
-        
+        return (0..<x.columns).map({ sum(x[column: $0]) })
     case .Row:
-        var result = Matrix<Float>(rows: x.rows, columns: 1, repeatedValue: 0.0)
-        for i in 0..<x.rows {
-            result.grid[i] = sum(x[i])
-        }
-        return result
+        return (0..<x.rows).map({ sum(x[$0]) })
     }
 }
 
 /**
  Matrix absolute summation.
  - parameter x: a Matrix
- - parameter axies: .Column sums along columns, .Row sums along rows.
- - returns: the absolute sum of columns, resp. rows as a column matrix,
- resp. a row matrix (element-wise, newly allocated)
+ - returns: ∑(i=0..rows-1)∑(j=0..columns-1) |x[i, j]|
  */
-public func asum(x: Matrix<Double>, axies: MatrixAxies = .Column) -> Matrix<Double> {
-    
+public func asum(x: Matrix<Double>) -> Double {
+    return asum(x.grid)
+}
+
+/**
+ Matrix absolute summation.
+ - parameter x: a Matrix
+ - parameter axies: .Column sums columns, .Row sums rows.
+ - returns: the absolute sum of columns, resp. rows
+ */
+public func asum(x: Matrix<Double>, axies: MatrixAxies) -> [Double] {
     switch axies {
     case .Column:
-        var result = Matrix<Double>(rows: 1, columns: x.columns, repeatedValue: 0.0)
-        for i in 0..<x.columns {
-            result.grid[i] = asum(x[column: i])
-        }
-        return result
-        
+        return (0..<x.columns).map({ asum(x[column: $0]) })
     case .Row:
-        var result = Matrix<Double>(rows: x.rows, columns: 1, repeatedValue: 0.0)
-        for i in 0..<x.rows {
-            result.grid[i] = asum(x[i])
-        }
-        return result
+        return (0..<x.rows).map({ asum(x[$0]) })
     }
 }
 
 /**
  Matrix absolute summation.
  - parameter x: a Matrix
- - parameter axies: .Column sums along columns, .Row sums along rows.
- - returns: the absolute sum of columns, resp. rows as a column matrix,
- resp. a row matrix (element-wise, newly allocated)
+ - returns: ∑(i=0..rows-1)∑(j=0..columns-1) |x[i, j]|
  */
-public func asum(x: Matrix<Float>, axies: MatrixAxies = .Column) -> Matrix<Float> {
-    
+public func asum(x: Matrix<Float>) -> Float {
+    return asum(x.grid)
+}
+
+/**
+ Matrix absolute summation.
+ - parameter x: a Matrix
+ - parameter axies: .Column sums columns, .Row sums rows.
+ - returns: the absolute sum of columns, resp. rows
+ */
+public func asum(x: Matrix<Float>, axies: MatrixAxies) -> [Float] {
     switch axies {
     case .Column:
-        var result = Matrix<Float>(rows: 1, columns: x.columns, repeatedValue: 0.0)
-        for i in 0..<x.columns {
-            result.grid[i] = asum(x[column: i])
-        }
-        return result
-        
+        return (0..<x.columns).map({ asum(x[column: $0]) })
     case .Row:
-        var result = Matrix<Float>(rows: x.rows, columns: 1, repeatedValue: 0.0)
-        for i in 0..<x.rows {
-            result.grid[i] = asum(x[i])
-        }
-        return result
+        return (0..<x.rows).map({ asum(x[$0]) })
     }
 }
 
@@ -630,7 +622,7 @@ public func asum(x: Matrix<Float>, axies: MatrixAxies = .Column) -> Matrix<Float
  - remark: implementation asserts matrix is non-singular.
  */
 public func inv(x : Matrix<Float>) -> Matrix<Float> {
-    precondition(x.rows == x.columns, "Matrix must be square")
+    precondition(x.rows == x.columns, "Matrix(\(x.rows),\(x.columns)) is not square")
 
     var results = x
 
@@ -655,7 +647,7 @@ public func inv(x : Matrix<Float>) -> Matrix<Float> {
  - remark: implementation asserts matrix is non-singular.
  */
 public func inv(x : Matrix<Double>) -> Matrix<Double> {
-    precondition(x.rows == x.columns, "Matrix must be square")
+    precondition(x.rows == x.columns, "Matrix(\(x.rows),\(x.columns)) is not square")
 
     var results = x
 
@@ -725,6 +717,20 @@ public func - (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
  */
 public func - (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
     return sub(lhs, rhs)
+}
+
+/**
+ Matrix-Matrix multiplication
+ */
+public func * (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
+    return mul(lhs, rhs)
+}
+
+/**
+ Matrix-Matrix multiplication
+ */
+public func * (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
+    return mul(lhs, rhs)
 }
 
 /**
