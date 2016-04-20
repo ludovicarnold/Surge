@@ -260,7 +260,7 @@ public func measq(x: [Double]) -> Double {
  - returns: newly allocated x + y
  */
 public func add(x: [Float], _ y: [Float]) -> [Float] {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with element-wise addition")
     var results = [Float](y)
     cblas_saxpy(Int32(x.count), 1.0, x, 1, &results, 1)
 
@@ -275,7 +275,7 @@ public func add(x: [Float], _ y: [Float]) -> [Float] {
  - returns: newly allocated x + y
  */
 public func add(x: [Double], _ y: [Double]) -> [Double] {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with element-wise addition")
     var results = [Double](y)
     cblas_daxpy(Int32(x.count), 1.0, x, 1, &results, 1)
 
@@ -292,7 +292,7 @@ public func add(x: [Double], _ y: [Double]) -> [Double] {
  - returns: newly allocated x - y
  */
 public func sub(x: [Float], _ y: [Float]) -> [Float] {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with element-wise subtraction")
     var results = [Float](y)
     catlas_saxpby(Int32(x.count), 1.0, x, 1, -1, &results, 1)
     
@@ -307,7 +307,7 @@ public func sub(x: [Float], _ y: [Float]) -> [Float] {
  - returns: newly allocated x - y
  */
 public func sub(x: [Double], _ y: [Double]) -> [Double] {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with element-wise subtraction")
     var results = [Double](y)
     catlas_daxpby(Int32(x.count), 1.0, x, 1, -1, &results, 1)
     
@@ -324,7 +324,7 @@ public func sub(x: [Double], _ y: [Double]) -> [Double] {
  - returns: newly allocated x * y
  */
 public func mul(x: [Float], _ y: [Float]) -> [Float] {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with element-wise multiplication")
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vDSP_vmul(x, 1, y, 1, &results, 1, vDSP_Length(x.count))
 
@@ -339,7 +339,7 @@ public func mul(x: [Float], _ y: [Float]) -> [Float] {
  - returns: newly allocated x * y
  */
 public func mul(x: [Double], _ y: [Double]) -> [Double] {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with element-wise multiplication")
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vDSP_vmulD(x, 1, y, 1, &results, 1, vDSP_Length(x.count))
 
@@ -356,7 +356,7 @@ public func mul(x: [Double], _ y: [Double]) -> [Double] {
  - returns: newly allocated x / y
  */
 public func div(x: [Float], _ y: [Float]) -> [Float] {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with element-wise division")
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvdivf(&results, x, y, [Int32(x.count)])
 
@@ -371,7 +371,7 @@ public func div(x: [Float], _ y: [Float]) -> [Float] {
  - returns: newly allocated x / y
  */
 public func div(x: [Double], _ y: [Double]) -> [Double] {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with element-wise division")
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvdiv(&results, x, y, [Int32(x.count)])
 
@@ -379,7 +379,7 @@ public func div(x: [Double], _ y: [Double]) -> [Double] {
 }
 
 public func mod(x: [Float], _ y: [Float]) -> [Float] {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with element-wise modulo")
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvfmodf(&results, x, y, [Int32(x.count)])
 
@@ -387,7 +387,7 @@ public func mod(x: [Float], _ y: [Float]) -> [Float] {
 }
 
 public func mod(x: [Double], _ y: [Double]) -> [Double] {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with element-wise modulo")
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvfmod(&results, x, y, [Int32(x.count)])
 
@@ -397,7 +397,7 @@ public func mod(x: [Double], _ y: [Double]) -> [Double] {
 // MARK: Remainder
 
 public func remainder(x: [Float], _ y: [Float]) -> [Float] {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with element-wise remainder")
     var results = [Float](count: x.count, repeatedValue: 0.0)
     vvremainderf(&results, x, y, [Int32(x.count)])
 
@@ -405,7 +405,7 @@ public func remainder(x: [Float], _ y: [Float]) -> [Float] {
 }
 
 public func remainder(x: [Double], _ y: [Double]) -> [Double] {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with element-wise remainder")
     var results = [Double](count: x.count, repeatedValue: 0.0)
     vvremainder(&results, x, y, [Int32(x.count)])
 
@@ -448,7 +448,7 @@ public func sqrt(x: [Double]) -> [Double] {
  - returns: ∑(i=0..count-1) x[i].y[i]
 */
 public func dot(x: [Float], _ y: [Float]) -> Float {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with dot product")
 
     var result: Float = 0.0
     vDSP_dotpr(x, 1, y, 1, &result, vDSP_Length(x.count))
@@ -464,7 +464,7 @@ public func dot(x: [Float], _ y: [Float]) -> Float {
  - returns: ∑(i=0..count-1) x[i].y[i]
  */
 public func dot(x: [Double], _ y: [Double]) -> Double {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with dot product")
 
     var result: Double = 0.0
     vDSP_dotprD(x, 1, y, 1, &result, vDSP_Length(x.count))
@@ -482,7 +482,7 @@ public func dot(x: [Double], _ y: [Double]) -> Double {
  - returns: ∑(i=0..count-1) (x[i]-y[i])²
  */
 public func dist(x: [Float], _ y: [Float]) -> Float {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with Euclidean distance")
     let sub = x - y
     var squared = [Float](count: x.count, repeatedValue: 0.0)
     vDSP_vsq(sub, 1, &squared, 1, vDSP_Length(x.count))
@@ -498,7 +498,7 @@ public func dist(x: [Float], _ y: [Float]) -> Float {
  - returns: ∑(i=0..count-1) (x[i]-y[i])²
  */
 public func dist(x: [Double], _ y: [Double]) -> Double {
-    precondition(x.count == y.count, "Vectors must have equal count")
+    precondition(x.count == y.count, "Vector(\(x.count)) and Vector(\(y.count)) not compatible with Euclidean distance")
     let sub = x - y
     var squared = [Double](count: x.count, repeatedValue: 0.0)
     vDSP_vsqD(sub, 1, &squared, 1, vDSP_Length(x.count))
@@ -511,18 +511,24 @@ public func dist(x: [Double], _ y: [Double]) -> Double {
 /**
  Array concatenation (default + operator behavior).
 */
-public func concat(a: [Float], _ b: [Float]) -> [Float] {
-    let result =  a + b
-    assert(result.count == a.count + b.count)
+public func concat(args: [Float]...) -> [Float] {
+    var result = [Float]()
+    for arg in args {
+        result.appendContentsOf(arg)
+    }
+    assert(result.count == args.map({ $0.count }).reduce(0, combine: +) )
     return result
 }
 
 /**
  Array concatenation (default + operator behavior).
  */
-public func concat(a: [Double], _ b: [Double]) -> [Double] {
-    let result =  a + b
-    assert(result.count == a.count + b.count)
+public func concat(args: [Double]...) -> [Double] {
+    var result = [Double]()
+    for arg in args {
+        result.appendContentsOf(arg)
+    }
+    assert(result.count == args.map({ $0.count }).reduce(0, combine: +) )
     return result
 }
 
@@ -537,6 +543,15 @@ public func + (lhs: [Float], rhs: [Float]) -> [Float] {
 }
 
 /**
+ Add rhs to lhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ */
+public func += (inout lhs: [Float], rhs: [Float]) {
+    lhs = add(lhs, rhs)
+}
+
+/**
  Add lhs and rhs (element-wise).
  - parameter lhs: an Array.
  - parameter rhs: an Array.
@@ -544,6 +559,25 @@ public func + (lhs: [Float], rhs: [Float]) -> [Float] {
  */
 public func + (lhs: [Double], rhs: [Double]) -> [Double] {
     return add(lhs, rhs)
+}
+
+/**
+ Add rhs to lhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ */
+public func += (inout lhs: [Double], rhs: [Double]) {
+    lhs = add(lhs, rhs)
+}
+
+/**
+ Add lhs and rhs (element-wise).
+ - parameter lhs: a Float.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs + rhs
+ */
+public func + (lhs: Float, rhs: [Float]) -> [Float] {
+    return add([Float](count: rhs.count, repeatedValue: lhs), rhs)
 }
 
 /**
@@ -557,6 +591,25 @@ public func + (lhs: [Float], rhs: Float) -> [Float] {
 }
 
 /**
+ Add rhs to lhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: a Float.
+ */
+public func += (inout lhs: [Float], rhs: Float) {
+    lhs = add(lhs, [Float](count: lhs.count, repeatedValue: rhs))
+}
+
+/**
+ Add lhs and rhs (element-wise).
+ - parameter lhs: a Double.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs + rhs
+ */
+public func + (lhs: Double, rhs: [Double]) -> [Double] {
+    return add([Double](count: rhs.count, repeatedValue: lhs), rhs)
+}
+
+/**
  Add lhs and rhs (element-wise).
  - parameter lhs: an Array.
  - parameter rhs: a Double.
@@ -564,6 +617,14 @@ public func + (lhs: [Float], rhs: Float) -> [Float] {
  */
 public func + (lhs: [Double], rhs: Double) -> [Double] {
     return add(lhs, [Double](count: lhs.count, repeatedValue: rhs))
+}
+
+/**
+ Add rhs to lhs (element-wise).
+ - parameter lhs: an Array.
+ */
+public func += (inout lhs: [Double], rhs: Double) {
+    lhs = add(lhs, [Double](count: lhs.count, repeatedValue: rhs))
 }
 
 /**
@@ -580,10 +641,38 @@ public func - (lhs: [Float], rhs: [Float]) -> [Float] {
  Subtract rhs from lhs (element-wise).
  - parameter lhs: an Array.
  - parameter rhs: an Array.
+ */
+public func -= (inout lhs: [Float], rhs: [Float]) {
+    lhs = sub(lhs, rhs)
+}
+
+/**
+ Subtract rhs from lhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
  - returns: newly allocated lhs - rhs
  */
 public func - (lhs: [Double], rhs: [Double]) -> [Double] {
     return sub(lhs, rhs)
+}
+
+/**
+ Subtract rhs from lhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ */
+public func -= (inout lhs: [Double], rhs: [Double]) {
+    lhs = sub(lhs, rhs)
+}
+
+/**
+ Subtract rhs from lhs (element-wise).
+ - parameter lhs: a Float.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs - rhs
+ */
+public func - (lhs: Float, rhs: [Float]) -> [Float] {
+    return sub([Float](count: rhs.count, repeatedValue: lhs), rhs)
 }
 
 /**
@@ -599,11 +688,39 @@ public func - (lhs: [Float], rhs: Float) -> [Float] {
 /**
  Subtract rhs from lhs (element-wise).
  - parameter lhs: an Array.
+ - parameter rhs: a Float.
+ */
+public func -= (inout lhs: [Float], rhs: Float) {
+    lhs = sub(lhs, [Float](count: lhs.count, repeatedValue: rhs))
+}
+
+/**
+ Subtract rhs from lhs (element-wise).
+ - parameter lhs: a Double.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs - rhs
+ */
+public func - (lhs: Double, rhs: [Double]) -> [Double] {
+    return sub([Double](count: rhs.count, repeatedValue: lhs), rhs)
+}
+
+/**
+ Subtract rhs from lhs (element-wise).
+ - parameter lhs: an Array.
  - parameter rhs: a Double.
  - returns: newly allocated lhs - rhs
  */
 public func - (lhs: [Double], rhs: Double) -> [Double] {
     return sub(lhs, [Double](count: lhs.count, repeatedValue: rhs))
+}
+
+/**
+ Subtract rhs from lhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: a Double.
+ */
+public func -= (inout lhs: [Double], rhs: Double) {
+    lhs = sub(lhs, [Double](count: lhs.count, repeatedValue: rhs))
 }
 
 /**
@@ -620,10 +737,38 @@ public func / (lhs: [Float], rhs: [Float]) -> [Float] {
  Divide lhs by rhs (element-wise).
  - parameter lhs: an Array.
  - parameter rhs: an Array.
+ */
+public func /= (inout lhs: [Float], rhs: [Float]) {
+    lhs = div(lhs, rhs)
+}
+
+/**
+ Divide lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
  - returns: newly allocated lhs / rhs
  */
 public func / (lhs: [Double], rhs: [Double]) -> [Double] {
     return div(lhs, rhs)
+}
+
+/**
+ Divide lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ */
+public func /= (inout lhs: [Double], rhs: [Double]) {
+    lhs = div(lhs, rhs)
+}
+
+/**
+ Divide lhs by rhs (element-wise).
+ - parameter lhs: a Float.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs / rhs
+ */
+public func / (lhs: Float, rhs: [Float]) -> [Float] {
+    return div([Float](count: rhs.count, repeatedValue: lhs), rhs)
 }
 
 /**
@@ -639,11 +784,39 @@ public func / (lhs: [Float], rhs: Float) -> [Float] {
 /**
  Divide lhs by rhs (element-wise).
  - parameter lhs: an Array.
+ - parameter rhs: a Float.
+ */
+public func /= (inout lhs: [Float], rhs: Float) {
+    lhs = div(lhs, [Float](count: lhs.count, repeatedValue: rhs))
+}
+
+/**
+ Divide lhs by rhs (element-wise).
+ - parameter lhs: a Double.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs / rhs
+ */
+public func / (lhs: Double, rhs: [Double]) -> [Double] {
+    return div([Double](count: rhs.count, repeatedValue: lhs), rhs)
+}
+
+/**
+ Divide lhs by rhs (element-wise).
+ - parameter lhs: an Array.
  - parameter rhs: a Double.
  - returns: newly allocated lhs / rhs
  */
 public func / (lhs: [Double], rhs: Double) -> [Double] {
     return div(lhs, [Double](count: lhs.count, repeatedValue: rhs))
+}
+
+/**
+ Divide lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: a Double.
+ */
+public func /= (inout lhs: [Double], rhs: Double) {
+    lhs = div(lhs, [Double](count: lhs.count, repeatedValue: rhs))
 }
 
 /**
@@ -660,10 +833,38 @@ public func * (lhs: [Float], rhs: [Float]) -> [Float] {
  Multiply lhs by rhs (element-wise).
  - parameter lhs: an Array.
  - parameter rhs: an Array.
+ */
+public func *= (inout lhs: [Float], rhs: [Float]) {
+    lhs = mul(lhs, rhs)
+}
+
+/**
+ Multiply lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
  - returns: newly allocated lhs * rhs
  */
 public func * (lhs: [Double], rhs: [Double]) -> [Double] {
     return mul(lhs, rhs)
+}
+
+/**
+ Multiply lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: an Array.
+ */
+public func *= (inout lhs: [Double], rhs: [Double]) {
+    lhs = mul(lhs, rhs)
+}
+
+/**
+ Multiply lhs by rhs (element-wise).
+ - parameter lhs: a Float.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs * rhs
+ */
+public func * (lhs: Float, rhs: [Float]) -> [Float] {
+    return mul([Float](count: rhs.count, repeatedValue: lhs), rhs)
 }
 
 /**
@@ -679,6 +880,25 @@ public func * (lhs: [Float], rhs: Float) -> [Float] {
 /**
  Multiply lhs by rhs (element-wise).
  - parameter lhs: an Array.
+ - parameter rhs: a Float.
+ */
+public func *= (inout lhs: [Float], rhs: Float) {
+    lhs = mul(lhs, [Float](count: lhs.count, repeatedValue: rhs))
+}
+
+/**
+ Multiply lhs by rhs (element-wise).
+ - parameter lhs: a Double.
+ - parameter rhs: an Array.
+ - returns: newly allocated lhs * rhs
+ */
+public func * (lhs: Double, rhs: [Double]) -> [Double] {
+    return mul([Double](count: rhs.count, repeatedValue: lhs), rhs)
+}
+
+/**
+ Multiply lhs by rhs (element-wise).
+ - parameter lhs: an Array.
  - parameter rhs: a Double.
  - returns: newly allocated lhs * rhs
  */
@@ -686,20 +906,53 @@ public func * (lhs: [Double], rhs: Double) -> [Double] {
     return mul(lhs, [Double](count: lhs.count, repeatedValue: rhs))
 }
 
+/**
+ Multiply lhs by rhs (element-wise).
+ - parameter lhs: an Array.
+ - parameter rhs: a Double.
+ */
+public func *= (inout lhs: [Double], rhs: Double) {
+    lhs = mul(lhs, [Double](count: lhs.count, repeatedValue: rhs))
+}
+
 public func % (lhs: [Float], rhs: [Float]) -> [Float] {
     return mod(lhs, rhs)
+}
+
+public func %= (inout lhs: [Float], rhs: [Float]) {
+    lhs = mod(lhs, rhs)
 }
 
 public func % (lhs: [Double], rhs: [Double]) -> [Double] {
     return mod(lhs, rhs)
 }
 
+public func %= (inout lhs: [Double], rhs: [Double]) {
+    lhs = mod(lhs, rhs)
+}
+
+public func % (lhs: Float, rhs: [Float]) -> [Float] {
+    return mod([Float](count: rhs.count, repeatedValue: lhs), rhs)
+}
+
 public func % (lhs: [Float], rhs: Float) -> [Float] {
     return mod(lhs, [Float](count: lhs.count, repeatedValue: rhs))
 }
 
+public func %= (inout lhs: [Float], rhs: Float) {
+    lhs = mod(lhs, [Float](count: lhs.count, repeatedValue: rhs))
+}
+
+public func % (lhs: Double, rhs: [Double]) -> [Double] {
+    return mod([Double](count: rhs.count, repeatedValue: lhs), rhs)
+}
+
 public func % (lhs: [Double], rhs: Double) -> [Double] {
     return mod(lhs, [Double](count: lhs.count, repeatedValue: rhs))
+}
+
+public func %= (inout lhs: [Double], rhs: Double) {
+    lhs = mod(lhs, [Double](count: lhs.count, repeatedValue: rhs))
 }
 
 /**
@@ -725,17 +978,4 @@ public func • (lhs: [Float], rhs: [Float]) -> Float {
     return dot(lhs, rhs)
 }
 
-prefix operator - {}
-/**
- Unary minus.
- */
-public prefix func - (value: [Float]) -> [Float] {
-    return [Float](count: value.count, repeatedValue: 0.0) - value
-}
 
-/**
-Unary minus.
-*/
-public prefix func - (value: [Double]) -> [Double] {
-    return [Double](count: value.count, repeatedValue: 0.0) - value
-}
