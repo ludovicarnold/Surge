@@ -26,11 +26,14 @@ import Accelerate
 // MARK: Convolution
 
 /**
- Convolution of a signal [x], with a kernel [k].
+ Convolution.
  - remark: The signal must be at least as long as the kernel.
+ - parameter x: a signal.
+ - parameter k: a kernel.
+ - returns: the convolution of x with k.
 */
 public func conv(x: [Float], _ k: [Float]) -> [Float] {
-    precondition(x.count >= k.count, "Input vector [x] must have at least as many elements as the kernel,  [k]")
+    precondition(x.count >= k.count, "Input x=Vector(\(x.count)) is shorter than kernel k=Vector(\(k.count))")
     
     let resultSize = x.count + k.count - 1
     var result = [Float](count: resultSize, repeatedValue: 0)
@@ -43,11 +46,14 @@ public func conv(x: [Float], _ k: [Float]) -> [Float] {
 }
 
 /**
- Convolution of a signal [x], with a kernel [k].
+ Convolution.
  - remark: The signal must be at least as long as the kernel.
+ - parameter x: a signal.
+ - parameter k: a kernel.
+ - returns: the convolution of x with k.
 */
 public func conv(x: [Double], _ k: [Double]) -> [Double] {
-    precondition(x.count >= k.count, "Input vector [x] must have at least as many elements as the kernel,  [k]")
+    precondition(x.count >= k.count, "Input x=Vector(\(x.count)) is shorter than kernel k=Vector(\(k.count))")
     
     let resultSize = x.count + k.count - 1
     var result = [Double](count: resultSize, repeatedValue: 0)
@@ -66,7 +72,7 @@ public func conv(x: [Double], _ k: [Double]) -> [Double] {
  - remark: The signal [y] is padded so that it is the same length as [x].
 */
 public func xcorr(x: [Float], _ y: [Float]) -> [Float] {
-    precondition(x.count >= y.count, "Input vector [x] must have at least as many elements as [y]")
+    precondition(x.count >= y.count, "Input x=Vector(\(x.count)) is shorter than y=Vector(\(y.count))")
     var yPadded = y
     if x.count > y.count {
         let padding = Repeat(count: x.count - y.count, repeatedValue: Float(0.0))
@@ -87,7 +93,7 @@ public func xcorr(x: [Float], _ y: [Float]) -> [Float] {
  - remark: The signal [y] is padded so that it is the same length as [x].
 */
 public func xcorr(x: [Double], _ y: [Double]) -> [Double] {
-    precondition(x.count >= y.count, "Input vector [x] must have at least as many elements as [y]")
+    precondition(x.count >= y.count, "Input x=Vector(\(x.count)) is shorter than y=Vector(\(y.count))")
     var yPadded = y
     if x.count > y.count {
         let padding = Repeat(count: x.count - y.count, repeatedValue: Double(0.0))
