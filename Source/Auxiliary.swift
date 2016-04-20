@@ -261,3 +261,18 @@ public func trunc(x: [Double]) -> [Double] {
 
     return results
 }
+
+prefix operator - {}
+/**
+ Unary minus.
+ */
+public prefix func - (value: [Float]) -> [Float] {
+    return neg(value)
+}
+
+/**
+ Unary minus.
+ */
+public prefix func - (value: [Double]) -> [Double] {
+    return neg(value)
+}
