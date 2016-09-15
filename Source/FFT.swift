@@ -24,17 +24,17 @@ import Accelerate
 
 // MARK: Fast Fourier Transform
 
-public func fft(input: [Float]) -> [Float] {
+public func fft(_ input: [Float]) -> [Float] {
     var real = [Float](input)
-    var imaginary = [Float](count: input.count, repeatedValue: 0.0)
+    var imaginary = [Float](repeating: 0.0, count: input.count)
     var splitComplex = DSPSplitComplex(realp: &real, imagp: &imaginary)
 
     let length = vDSP_Length(floor(log2(Float(input.count))))
     let radix = FFTRadix(kFFTRadix2)
     let weights = vDSP_create_fftsetup(length, radix)
-    vDSP_fft_zip(weights, &splitComplex, 1, length, FFTDirection(FFT_FORWARD))
+    vDSP_fft_zip(weights!, &splitComplex, 1, length, FFTDirection(FFT_FORWARD))
 
-    var magnitudes = [Float](count: input.count, repeatedValue: 0.0)
+    var magnitudes = [Float](repeating: 0.0, count: input.count)
     vDSP_zvmags(&splitComplex, 1, &magnitudes, 1, vDSP_Length(input.count))
 
 //    var normalizedMagnitudes = [Float](count: input.count, repeatedValue: 0.0)
@@ -45,17 +45,17 @@ public func fft(input: [Float]) -> [Float] {
     return magnitudes
 }
 
-public func fft(input: [Double]) -> [Double] {
+public func fft(_ input: [Double]) -> [Double] {
     var real = [Double](input)
-    var imaginary = [Double](count: input.count, repeatedValue: 0.0)
+    var imaginary = [Double](repeating: 0.0, count: input.count)
     var splitComplex = DSPDoubleSplitComplex(realp: &real, imagp: &imaginary)
 
     let length = vDSP_Length(floor(log2(Float(input.count))))
     let radix = FFTRadix(kFFTRadix2)
     let weights = vDSP_create_fftsetupD(length, radix)
-    vDSP_fft_zipD(weights, &splitComplex, 1, length, FFTDirection(FFT_FORWARD))
+    vDSP_fft_zipD(weights!, &splitComplex, 1, length, FFTDirection(FFT_FORWARD))
 
-    var magnitudes = [Double](count: input.count, repeatedValue: 0.0)
+    var magnitudes = [Double](repeating: 0.0, count: input.count)
     vDSP_zvmagsD(&splitComplex, 1, &magnitudes, 1, vDSP_Length(input.count))
 
 //    var normalizedMagnitudes = [Double](count: input.count, repeatedValue: 0.0)
