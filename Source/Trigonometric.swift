@@ -201,7 +201,7 @@ public func atan(_ x: [Double]) -> [Double] {
  */
 func rad2deg(_ x: [Float]) -> [Float] {
     var results = [Float](repeating: 0.0, count: x.count)
-    let divisor = [Float](repeating: Float(M_PI / 180.0), count: x.count)
+    let divisor = [Float](repeating: Float(Double.pi / 180.0), count: x.count)
     vvdivf(&results, x, divisor, [Int32(x.count)])
 
     return results
@@ -212,7 +212,7 @@ func rad2deg(_ x: [Float]) -> [Float] {
  */
 func rad2deg(_ x: [Double]) -> [Double] {
     var results = [Double](repeating: 0.0, count: x.count)
-    let divisor = [Double](repeating: M_PI / 180.0, count: x.count)
+    let divisor = [Double](repeating: Double.pi / 180.0, count: x.count)
     vvdiv(&results, x, divisor, [Int32(x.count)])
 
     return results
@@ -225,7 +225,7 @@ func rad2deg(_ x: [Double]) -> [Double] {
  */
 func deg2rad(_ x: [Float]) -> [Float] {
     var results = [Float](repeating: 0.0, count: x.count)
-    let divisor = [Float](repeating: Float(180.0 / M_PI), count: x.count)
+    let divisor = [Float](repeating: Float(180.0 / Double.pi), count: x.count)
     vvdivf(&results, x, divisor, [Int32(x.count)])
 
     return results
@@ -236,7 +236,7 @@ func deg2rad(_ x: [Float]) -> [Float] {
  */
 func deg2rad(_ x: [Double]) -> [Double] {
     var results = [Double](repeating: 0.0, count: x.count)
-    let divisor = [Double](repeating: 180.0 / M_PI, count: x.count)
+    let divisor = [Double](repeating: 180.0 / Double.pi, count: x.count)
     vvdiv(&results, x, divisor, [Int32(x.count)])
 
     return results
