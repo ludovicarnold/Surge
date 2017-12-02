@@ -45,12 +45,11 @@ public enum MatrixAxies {
  - note: the matrix is in row major (a.k.a. C) order.
 */
 public struct Matrix<T> where T: FloatingPoint, T: ExpressibleByFloatLiteral {
-    public typealias Element = T
 
     public let rows: Int
     public let columns: Int
     public let size: Int
-    var grid: [Element]
+    var grid: [T]
     
     /**
      Create a new matrix initialized with the given contents (deferred copy).
@@ -58,7 +57,7 @@ public struct Matrix<T> where T: FloatingPoint, T: ExpressibleByFloatLiteral {
      - parameter columns: the number of columns
      - parameter grid: the matrix contents.
      */
-    public init(rows: Int, columns: Int, grid: [Element]) {
+    public init(rows: Int, columns: Int, grid: [T]) {
         self.rows = rows
         self.columns = columns
         self.size = rows * columns
@@ -71,8 +70,8 @@ public struct Matrix<T> where T: FloatingPoint, T: ExpressibleByFloatLiteral {
      - parameter columns: the number of columns.
      - parameter repeatedValue: the initial value for all matrix elements.
     */
-    public init(rows: Int, columns: Int, repeatedValue: Element) {
-        let grid = [Element](repeating: repeatedValue, count: rows * columns)
+    public init(rows: Int, columns: Int, repeatedValue: T) {
+        let grid = [T](repeating: repeatedValue, count: rows * columns)
         self.init(rows: rows, columns: columns, grid: grid)
     }
     
@@ -80,10 +79,10 @@ public struct Matrix<T> where T: FloatingPoint, T: ExpressibleByFloatLiteral {
      Create a new matrix initialized with the given contents (copy).
      - parameter contents: the matrix contents.
     */
-    public init(_ contents: [[Element]]) {
+    public init(_ contents: [[T]]) {
         let m: Int = contents.count
         let n: Int = contents[0].count
-        let repeatedValue: Element = 0.0 
+        let repeatedValue: T = 0.0
 
         self.init(rows: m, columns: n, repeatedValue: repeatedValue)
 
@@ -95,7 +94,7 @@ public struct Matrix<T> where T: FloatingPoint, T: ExpressibleByFloatLiteral {
     /**
      - returns: This matrix as a 1d array (deferred copy).
     */
-    public func ravel() -> [Element] {
+    public func ravel() -> [T] {
         return self.grid
     }
     
@@ -105,7 +104,7 @@ public struct Matrix<T> where T: FloatingPoint, T: ExpressibleByFloatLiteral {
      - parameter columns: new number of columns.
      - returns: a Matrix(rows, columns) with the same contents as self.
     */
-    public func reshape(_ rows: Int, _ columns: Int) -> Matrix<Element> {
+    public func reshape(_ rows: Int, _ columns: Int) -> Matrix<T> {
         precondition( size == rows * columns, "cannot reshape Matrix(\(self.rows),\(self.columns)) to shape(\(rows),\(columns))")
         return Matrix<T>(rows: rows, columns: columns, grid: self.grid)
     }
@@ -116,7 +115,7 @@ public struct Matrix<T> where T: FloatingPoint, T: ExpressibleByFloatLiteral {
      - parameter row: the element's row
      - parameter column: the element's column
     */
-    public subscript(row: Int, column: Int) -> Element {
+    public subscript(row: Int, column: Int) -> T {
         get {
             assert(indexIsValidForRow(row, column: column))
             return grid[(row * columns) + column]
@@ -132,7 +131,7 @@ public struct Matrix<T> where T: FloatingPoint, T: ExpressibleByFloatLiteral {
      Get (deferred copy) or set (copy) a row .
      - parameter row: the row index.
     */
-    public subscript(row row: Int) -> [Element] {
+    public subscript(row row: Int) -> [T] {
         get {
             assert(row < rows)
             let startIndex = row * columns
@@ -153,7 +152,7 @@ public struct Matrix<T> where T: FloatingPoint, T: ExpressibleByFloatLiteral {
      Get (copy) or set (copy) a column.
      - parameter column: the column index.
     */
-    public subscript(column column: Int) -> [Element] {
+    public subscript(column column: Int) -> [T] {
         get {
             assert(column < columns)
             return (stride(from: column, to: size, by: columns)).map({ self.grid[$0] })
@@ -169,8 +168,8 @@ public struct Matrix<T> where T: FloatingPoint, T: ExpressibleByFloatLiteral {
     /**
      Get the matrix as a 2D Array (deferred copy).
     */
-    public func asArray() -> [[Element]] {
-        var result = [[Element]]()
+    public func asArray() -> [[T]] {
+        var result = [[T]]()
         for i in 0..<rows {
             result.append(self[row: i])
         }
@@ -219,7 +218,7 @@ extension Matrix: CustomStringConvertible {
 // MARK: - SequenceType
 
 extension Matrix: Sequence {
-    public func makeIterator() -> AnyIterator<ArraySlice<Element>> {
+    public func makeIterator() -> AnyIterator<ArraySlice<T>> {
         let endIndex = rows * columns
         var nextRowStartIndex = 0
 
