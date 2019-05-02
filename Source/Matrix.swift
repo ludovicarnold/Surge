@@ -629,10 +629,12 @@ public func inv(_ x : Matrix<Float>) -> Matrix<Float> {
     var lwork = __CLPK_integer(x.columns * x.columns)
     var work = [CFloat](repeating: 0.0, count: Int(lwork))
     var error: __CLPK_integer = 0
-    var nc = __CLPK_integer(x.columns)
-
-    sgetrf_(&nc, &nc, &(results.grid), &nc, &ipiv, &error)
-    sgetri_(&nc, &(results.grid), &nc, &ipiv, &work, &lwork, &error)
+    // Solution for Swift 5 migration from https://stackoverflow.com/questions/47114737/overlapping-accesses-pointer
+    // This is OK because dgetrf_ doesn't really mutate the pointer
+    let nc = __CLPK_integer(x.columns)
+    var nc1 = nc, nc2 = nc, nc3 = nc
+    sgetrf_(&nc1, &nc2, &(results.grid), &nc3, &ipiv, &error)
+    sgetri_(&nc1, &(results.grid), &nc2, &ipiv, &work, &lwork, &error)
 
     assert(error == 0, "Matrix not invertible")
 
@@ -654,10 +656,12 @@ public func inv(_ x : Matrix<Double>) -> Matrix<Double> {
     var lwork = __CLPK_integer(x.columns * x.columns)
     var work = [CDouble](repeating: 0.0, count: Int(lwork))
     var error: __CLPK_integer = 0
-    var nc = __CLPK_integer(x.columns)
-
-    dgetrf_(&nc, &nc, &(results.grid), &nc, &ipiv, &error)
-    dgetri_(&nc, &(results.grid), &nc, &ipiv, &work, &lwork, &error)
+    // Solution for Swift 5 migration from https://stackoverflow.com/questions/47114737/overlapping-accesses-pointer
+    // This is OK because dgetrf_ doesn't really mutate the pointer
+    let nc = __CLPK_integer(x.columns)
+    var nc1 = nc, nc2 = nc, nc3 = nc
+    dgetrf_(&nc1, &nc2, &(results.grid), &nc3, &ipiv, &error)
+    dgetri_(&nc1, &(results.grid), &nc2, &ipiv, &work, &lwork, &error)
 
     assert(error == 0, "Matrix not invertible")
 
